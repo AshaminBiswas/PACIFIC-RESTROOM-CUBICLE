@@ -17,6 +17,7 @@ export interface SystemAccessories {
   coatHook: boolean;
   ledBacklight: boolean;
   supportLeg: boolean;
+  bracketClamps: boolean;
   
   // Locker Accessories
   goldKnob: boolean;
@@ -64,6 +65,7 @@ const DEFAULT_ACCESSORIES: SystemAccessories = {
   coatHook: true,
   ledBacklight: false,
   supportLeg: true,
+  bracketClamps: true,
   goldKnob: true,
   keyLock: true,
   digitalLock: false,

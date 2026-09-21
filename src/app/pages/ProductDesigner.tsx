@@ -171,7 +171,7 @@ export default function ProductDesigner() {
       <SEO
         title="3D Design Studio | Pacific Products & Solutions"
         description="Design your perfect restroom, locker, or partition layout in our interactive 3D Design Studio. Customize materials, dimensions, and export specifications."
-        keywords={["3D design", "cubicle configurator", "restroom design", "partition designer", "locker layout"]}
+        keywords="3D design, cubicle configurator, restroom design, partition designer, locker layout"
       />
 
       <div

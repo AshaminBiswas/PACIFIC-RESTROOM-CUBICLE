@@ -213,8 +213,8 @@ export default function CubicleModel() {
                   <meshStandardMaterial color={hwColor} metalness={hwMetalness} roughness={hwRoughness} />
                 </mesh>
                 {/* Backplate */}
-                <mesh position={[0, 0, -0.005]}>
-                  <cylinderGeometry args={[0.028, 0.028, 0.008]} rotation={[Math.PI / 2, 0, 0]} />
+                <mesh position={[0, 0, -0.005]} rotation={[Math.PI / 2, 0, 0]}>
+                  <cylinderGeometry args={[0.028, 0.028, 0.008]} />
                   <meshStandardMaterial color={hwColor} metalness={hwMetalness} roughness={hwRoughness} />
                 </mesh>
                 {/* Indicator lock status plate (Red/Green indicator) */}
@@ -396,8 +396,8 @@ export default function CubicleModel() {
                       <sphereGeometry args={[0.012, 16, 16]} />
                       <meshStandardMaterial color={hwColor} metalness={0.9} roughness={0.15} />
                     </mesh>
-                    <mesh position={[0, 0, -0.006]}>
-                      <cylinderGeometry args={[0.006, 0.006, 0.012]} rotation={[Math.PI / 2, 0, 0]} />
+                    <mesh position={[0, 0, -0.006]} rotation={[Math.PI / 2, 0, 0]}>
+                      <cylinderGeometry args={[0.006, 0.006, 0.012]} />
                       <meshStandardMaterial color={hwColor} metalness={0.9} />
                     </mesh>
                   </group>
@@ -406,8 +406,8 @@ export default function CubicleModel() {
                 {/* Keyhole and Key details (under the knob, Image 1) */}
                 {accessories.keyLock && (
                   <group position={[compX + compW / 2 - 0.05, compY - 0.04, d / 2 + 0.013]}>
-                    <mesh>
-                      <cylinderGeometry args={[0.005, 0.005, 0.002]} rotation={[Math.PI / 2, 0, 0]} />
+                    <mesh rotation={[Math.PI / 2, 0, 0]}>
+                      <cylinderGeometry args={[0.005, 0.005, 0.002]} />
                       <meshStandardMaterial color={hwColor} metalness={0.8} />
                     </mesh>
                     {/* Small keyhole slit */}
