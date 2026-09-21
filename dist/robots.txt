@@ -1,0 +1,64 @@
+# Pacific Products & Solutions - robots.txt
+# https://pacificproduct.in
+
+# ── Standard crawlers ────────────────────────────────────────────
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Crawl-delay: 1
+
+# ── Google ────────────────────────────────────────────────────────
+User-agent: Googlebot
+Allow: /
+Disallow: /admin/
+
+User-agent: Googlebot-Image
+Allow: /
+
+# ── Bing ──────────────────────────────────────────────────────────
+User-agent: Bingbot
+Allow: /
+Disallow: /admin/
+Crawl-delay: 1
+
+# ── AI Crawlers (GEO — allow so AI models can cite us) ────────────
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: GoogleOther
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+# ── Sitemap ───────────────────────────────────────────────────────
+Sitemap: https://pacificproduct.in/sitemap.xml
+Sitemap: https://pacificproduct.in/llms.txt

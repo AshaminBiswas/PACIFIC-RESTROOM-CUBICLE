@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/nvidia/(.*)",
+      "destination": "/api/nvidia"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}

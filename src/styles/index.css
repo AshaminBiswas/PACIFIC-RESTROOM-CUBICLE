@@ -1,0 +1,23 @@
+@import './fonts.css';
+@import './tailwind.css';
+@import './theme.css';
+
+/* Additional global styles */
+* {
+  scroll-behavior: smooth;
+}
+
+/* Hide scrollbars but keep functionality */
+html {
+  overflow-x: hidden;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  overflow-x: hidden;
+}

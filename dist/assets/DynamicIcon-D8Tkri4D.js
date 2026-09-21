@@ -1,0 +1,1 @@
+import{j as i}from"./vendor-Cr-xVIk4.js";import{ae as t,a3 as r,v as e,x as c,_ as m,V as u,af as g,w as a,J as l,z as p}from"./lucide-Ca4cDK36.js";const x={Plane:p,ShoppingBag:l,Building2:a,Home:g,Factory:u,Globe:m,Shield:c,Award:e,Target:r,Lightbulb:t};function b({name:s,...o}){const n=x[s||"Building2"]||a;return i.jsx(n,{...o})}export{b as D};
