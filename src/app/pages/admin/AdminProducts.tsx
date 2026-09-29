@@ -100,6 +100,7 @@ export default function AdminProducts() {
   const PREDEFINED_CATEGORIES = [
     "Restroom Cubicles",
     "Toilet Partition",
+    "Kids Toilet",
     "Shower Cubicle",
     "Locker Solution",
     "Changing Room",
