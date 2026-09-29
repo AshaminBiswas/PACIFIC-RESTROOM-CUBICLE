@@ -166,8 +166,11 @@ export default function ProductDetailPage() {
 
   const hardwareList = rawHardwareList.length > 0 ? rawHardwareList : defaultHardwareList;
 
-  const ssOption = rawHardwareOptions.find(o => o.material === 'SS Hardware') || (isCubicle || isKids ? { material: 'SS Hardware', enabled: true, colors: ['golden', 'Black', 'stainless steel'] } : null);
-  const nylonOption = rawHardwareOptions.find(o => o.material === 'Nylon Hardware') || (isCubicle || isKids ? { material: 'Nylon Hardware', enabled: true, colors: [] } : null);
+  const hasHardwareMeta = Boolean(hardwareMeta && Array.isArray(hardwareMeta.hardwareOptions));
+  const ssOption = rawHardwareOptions.find(o => o.material === 'SS Hardware' && o.enabled !== false) ||
+    (!hasHardwareMeta && (isCubicle || isKids) ? { material: 'SS Hardware', enabled: true, colors: ['golden', 'Black', 'stainless steel'] } : null);
+  const nylonOption = rawHardwareOptions.find(o => o.material === 'Nylon Hardware' && o.enabled !== false) || null;
+  const aluminiumOption = rawHardwareOptions.find(o => o.material === 'Aluminium Profile' && o.enabled !== false) || null;
   const hasExtraLeg = Boolean(hardwareMeta?.hasExtraLeg);
 
   // Build the canonical URL path with category
@@ -486,7 +489,7 @@ export default function ProductDetailPage() {
                       Hardware Finishes &amp; Options
                     </h3>
                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                      Choose between Grade 304 Stainless Steel or High-Density Polyamide Nylon.
+                      Choose between Grade 304 Stainless Steel, Polyamide Nylon, and Anodized Aluminium Profiles.
                     </p>
                   </div>
 
@@ -557,6 +560,24 @@ export default function ProductDetailPage() {
                       </span>
                     </div>
                   )}
+
+                  {/* Aluminium Profile Hardware */}
+                  {aluminiumOption?.enabled && (
+                    <div className="bg-white dark:bg-black/40 border border-gray-200 dark:border-white/5 rounded-2xl p-5 flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-9 h-9 rounded-xl bg-slate-500/10 flex items-center justify-center text-slate-400 shrink-0">
+                          <Shield className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <div className="text-sm font-bold text-gray-900 dark:text-white">Aluminium Profile</div>
+                          <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Heavy-duty anodized, rust-proof extruded structural profiles</div>
+                        </div>
+                      </div>
+                      <span className="text-[11px] px-2.5 py-1 rounded-xl bg-slate-500/10 text-slate-600 dark:text-slate-300 border border-slate-500/20 font-semibold">
+                        Included
+                      </span>
+                    </div>
+                  )}
                 </div>
               ) : isLocker ? (
                 <div className="bg-indigo-500/10 border border-indigo-500/20 rounded-3xl p-6 space-y-3">
@@ -590,7 +611,7 @@ export default function ProductDetailPage() {
                 <div>
                   <h4 className="text-sm font-bold text-gray-900 dark:text-white">1-Year Hardware & 10-Year Cubicle Board Warranty</h4>
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed">
-                    1-Year direct replacement warranty on all Grade 304/316 SS and Polyamide nylon hardware fittings, alongside a 10-Year comprehensive warranty on solid compact phenolic laminate board against delamination, moisture damage, and swelling.
+                    1-Year direct replacement warranty on all Grade 304/316 SS, Aluminium Profile, and Polyamide nylon hardware fittings, alongside a 10-Year comprehensive warranty on solid compact phenolic laminate board against delamination, moisture damage, and swelling.
                   </p>
                 </div>
               </div>

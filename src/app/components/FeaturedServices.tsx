@@ -20,15 +20,15 @@ export function FeaturedServices() {
           className="text-center mb-10 sm:mb-14 lg:mb-16"
         >
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 text-[#7FB706]">
-            Featured Services
+            Featured Architectural Models
           </h2>
           <p className="text-base sm:text-lg lg:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto px-2">
-            Explore our range of premium interior solutions
+            Explore our precision-engineered cubicle, locker, and partition systems
           </p>
         </motion.div>
 
         {loading ? (
-          <div className="text-center text-gray-500 py-10">Loading featured services...</div>
+          <div className="text-center text-gray-500 py-10">Loading featured models...</div>
         ) : featuredProducts.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
             {featuredProducts.map((product) => {
@@ -50,7 +50,7 @@ export function FeaturedServices() {
             })}
           </div>
         ) : (
-          <div className="text-center text-gray-500 py-10">No featured services yet. Add some in the Admin panel!</div>
+          <div className="text-center text-gray-500 py-10">No featured models yet. Mark models as featured in the Admin panel!</div>
         )}
 
         <motion.div
@@ -60,7 +60,7 @@ export function FeaturedServices() {
           className="text-center mt-8 sm:mt-12"
         >
           <Button size="lg" variant="outline" onClick={() => navigate("/products")}>
-            View All Services
+            View All Models
             <ArrowRight className="w-5 h-5 ml-2" />
           </Button>
         </motion.div>

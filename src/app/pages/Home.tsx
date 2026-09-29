@@ -19,21 +19,32 @@ import {
   Package,
   Layers,
   ChevronDown,
+  ShieldCheck,
+  Droplets,
+  Flame,
+  Truck,
+  Building,
+  Hotel,
+  HeartPulse,
+  GraduationCap,
+  Compass,
+  Ruler,
+  FileSpreadsheet,
+  Box,
+  Wrench,
+  Check,
 } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router";
 import { Button } from "../components/Button";
 import { SEO } from "../components/SEO";
 import { organizationSchema, webSiteSchema, DEFAULT_KEYWORDS, aggregateRatingSchema, speakableSchema, faqSchema } from "../../lib/seo-data";
-import { ServiceCard } from "../components/ServiceCard";
-import { ProductCard } from "../components/ProductCard";
-import { TestimonialCarousel } from "../components/TestimonialCarousel";
-import { AnimatedCounter } from "../components/AnimatedCounter";
-
+import { FeaturedServices } from "../components/FeaturedServices";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { useRef, useState, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { supabase, isSupabaseConfigured } from "../../lib/supabase";
 import type { Product, Solution } from "../../lib/database.types";
+import { useHeroImages } from "../../lib/hooks";
 
 // ─────────────────────────────────────────────────────────────
 
@@ -695,168 +706,72 @@ function HeroSection() {
 }
 
 
-// ── Page ──────────────────────────────────────────────────────
+// ── Architectural Sections ──────────────────────────────────────
 
-
-import { useSolutions, useHeroImages, useCoreServices } from "../../lib/hooks";
-import { DynamicIcon } from "../components/DynamicIcon";
-import { ImageWithFallback as SolutionImage } from "../components/figma/ImageWithFallback";
-import { CoreServiceCard } from "../components/CoreServiceCard";
-import { FeaturedServices } from "../components/FeaturedServices";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-
-const stripHtml = (html: string) => html?.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim() || '';
-
-function SolutionsCarousel({ solutions, navigate }: { solutions: any[]; navigate: (path: string) => void }) {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [canLeft, setCanLeft] = useState(false);
-  const [canRight, setCanRight] = useState(true);
-
-  const updateButtons = () => {
-    const el = scrollRef.current;
-    if (!el) return;
-    setCanLeft(el.scrollLeft > 4);
-    setCanRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 4);
-  };
-
-  const scroll = (dir: 'left' | 'right') => {
-    const el = scrollRef.current;
-    if (!el) return;
-    const card = el.querySelector('[data-sol-card]') as HTMLElement;
-    const w = card ? card.offsetWidth + 24 : 380;
-    el.scrollBy({ left: dir === 'left' ? -w : w, behavior: 'smooth' });
-  };
-
-  return (
-    <div className="relative">
-      {/* Left button — desktop only */}
-      <button
-        onClick={() => scroll('left')}
-        disabled={!canLeft}
-        className="hidden lg:flex absolute -left-5 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-white dark:bg-[#0a0a1a] border border-gray-200 dark:border-white/10 shadow-lg items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-[#7FB706] hover:text-white hover:border-[#7FB706] transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed"
-        aria-label="Scroll left"
-      >
-        <ChevronLeft className="w-5 h-5" />
-      </button>
-
-      {/* Scroll container */}
-      <div
-        ref={scrollRef}
-        onScroll={updateButtons}
-        className="flex gap-6 overflow-x-auto pb-4 scroll-smooth snap-x snap-mandatory lg:snap-none"
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-      >
-        {solutions.map((solution, index) => (
-          <motion.div
-            data-sol-card
-            key={solution.id}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: Math.min(index * 0.08, 0.4), duration: 0.5 }}
-            whileHover={{ y: -6 }}
-            className="group relative flex flex-col bg-white dark:bg-[#0a0a1a] rounded-2xl overflow-hidden border border-gray-100 dark:border-white/5 shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer shrink-0 snap-start"
-            style={{ width: 'clamp(280px, 80vw, 380px)' }}
-            onClick={() => navigate(`/solutions/${solution.slug}`)}
-          >
-            {/* Glow border on hover */}
-            <div className="absolute inset-0 z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-2xl" style={{ boxShadow: 'inset 0 0 0 1.5px #7FB706' }} />
-
-            {/* Image */}
-            <div className="relative aspect-[16/10] overflow-hidden bg-gray-100 dark:bg-gray-900 z-10">
-              <SolutionImage src={solution.image_url} alt={solution.title} className="w-full h-full object-cover transform transition-transform duration-700 ease-out group-hover:scale-110" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-500" />
-              <div className="absolute inset-0 bg-[#7FB706] opacity-0 group-hover:opacity-20 transition-opacity duration-500 mix-blend-overlay" />
-              <div className="absolute bottom-4 left-6">
-                <div className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center group-hover:bg-[#7FB706]/20 group-hover:border-[#7FB706]/50 transition-colors duration-500">
-                  <DynamicIcon name={solution.icon_name} className="w-6 h-6 text-[#B5F823]" />
-                </div>
-              </div>
-            </div>
-
-            {/* Content */}
-            <div className="flex flex-col flex-1 p-6 z-10 relative bg-white dark:bg-[#0a0a1a]">
-              <div className="flex items-start justify-between gap-4 mb-3">
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white transition-colors duration-300 group-hover:text-[#7FB706]">{solution.title}</h3>
-                <div className="w-9 h-9 rounded-full flex items-center justify-center bg-gray-50 dark:bg-white/5 text-gray-400 group-hover:bg-[#7FB706] group-hover:text-white transition-colors duration-500 shrink-0 mt-0.5">
-                  <ArrowRight className="w-4 h-4 transform transition-transform duration-500 group-hover:translate-x-1" />
-                </div>
-              </div>
-              <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed flex-1 mb-5 line-clamp-2">
-                {solution.subtitle || stripHtml(solution.description)}
-              </p>
-              <div className="mt-auto pt-4 border-t border-gray-100 dark:border-white/10 flex items-center text-sm font-semibold text-gray-400 group-hover:text-[#7FB706] transition-colors duration-300 relative overflow-hidden">
-                <div className="absolute top-0 left-0 h-[2px] w-0 bg-gradient-to-r from-[#7FB706] to-[#B5F823] group-hover:w-full transition-all duration-700 ease-out" />
-                Explore Solution <ArrowRight className="w-4 h-4 ml-1 transform transition-transform duration-300 group-hover:translate-x-1" />
-              </div>
-            </div>
-          </motion.div>
-        ))}
-
-        {/* View All card at end */}
-        <div className="shrink-0 snap-start flex items-center justify-center" style={{ width: 'clamp(200px, 50vw, 260px)' }}>
-          <button
-            onClick={() => navigate('/solutions')}
-            className="flex flex-col items-center gap-3 p-8 rounded-2xl border-2 border-dashed border-gray-200 dark:border-white/10 text-gray-400 hover:border-[#7FB706] hover:text-[#7FB706] transition-all duration-300 w-full h-full justify-center"
-          >
-            <div className="w-12 h-12 rounded-full bg-gray-100 dark:bg-white/5 flex items-center justify-center group-hover:bg-[#7FB706]/10">
-              <ArrowRight className="w-6 h-6" />
-            </div>
-            <span className="font-semibold text-sm text-center">View All Solutions</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Right button — desktop only */}
-      <button
-        onClick={() => scroll('right')}
-        disabled={!canRight}
-        className="hidden lg:flex absolute -right-5 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-white dark:bg-[#0a0a1a] border border-gray-200 dark:border-white/10 shadow-lg items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-[#7FB706] hover:text-white hover:border-[#7FB706] transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed"
-        aria-label="Scroll right"
-      >
-        <ChevronRight className="w-5 h-5" />
-      </button>
-    </div>
-  );
-}
-
-function StatsSection() {
-  const stats = [
-    { label: "Experience", value: 12, suffix: "+ Years", icon: Award },
-    { label: "Projects completed", value: 600, suffix: "+", icon: CheckCircle2 },
-    { label: "Happy Clients", value: 100, suffix: "+", icon: Users },
-    { label: "Offices", value: 4, suffix: " Across India", icon: Building2 },
-    { label: "Warranty", value: 10, suffix: "-Year Board Warranty", icon: Shield },
+function ArchitecturalTrustStrip() {
+  const specs = [
+    {
+      icon: Award,
+      title: "ISO 9001:2015",
+      subtitle: "Certified Precision Fabrication",
+    },
+    {
+      icon: Flame,
+      title: "Class 1 Fire Retardant",
+      subtitle: "BS 476 Part 7 Compliant Core",
+    },
+    {
+      icon: Droplets,
+      title: "100% Waterproof",
+      subtitle: "Zero Swell & Moisture Proof",
+    },
+    {
+      icon: ShieldCheck,
+      title: "Dual Warranty Standard",
+      subtitle: "10-Yr Board & 1-Yr Hardware",
+    },
+    {
+      icon: Sparkles,
+      title: "Triple Hardware Suite",
+      subtitle: "SS 304 / Nylon / Aluminium",
+    },
+    {
+      icon: Truck,
+      title: "Pan-India Logistics",
+      subtitle: "Certified Turnkey Teams",
+    },
   ];
 
   return (
-    <section className="bg-[#030213] text-white py-12 border-y border-[#7FB706]/20 relative overflow-hidden">
-      {/* Subtle background glow */}
+    <section className="bg-[#030213] text-white py-6 sm:py-8 border-y border-[#7FB706]/20 relative overflow-hidden">
+      {/* Background glow effects */}
       <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 bg-[#7FB706]/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-96 h-96 bg-[#B5F823]/5 rounded-full blur-3xl pointer-events-none" />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-8 items-center text-center">
-          {stats.map((stat, idx) => {
-            const Icon = stat.icon;
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+          {specs.map((spec, idx) => {
+            const Icon = spec.icon;
             return (
               <motion.div
                 key={idx}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 15 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: idx * 0.1, duration: 0.5 }}
-                className="flex flex-col items-center group"
+                transition={{ delay: idx * 0.05, duration: 0.4 }}
+                className="flex items-center gap-3 p-3 rounded-2xl bg-white/[0.03] border border-white/5 hover:border-[#7FB706]/30 hover:bg-white/[0.06] transition-all group"
               >
-                <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-3 group-hover:border-[#7FB706] group-hover:bg-[#7FB706]/10 transition-all duration-300">
-                  <Icon className="w-6 h-6 text-[#B5F823] group-hover:scale-110 transition-transform duration-300" />
+                <div className="w-10 h-10 rounded-xl bg-[#7FB706]/10 border border-[#7FB706]/20 flex items-center justify-center shrink-0 group-hover:scale-105 group-hover:bg-[#7FB706]/20 transition-all">
+                  <Icon className="w-5 h-5 text-[#B5F823]" />
                 </div>
-                <div className="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#7FB706] to-[#B5F823]">
-                  <AnimatedCounter end={stat.value} suffix={stat.suffix} />
+                <div className="min-w-0">
+                  <div className="text-xs sm:text-sm font-bold text-white group-hover:text-[#B5F823] transition-colors truncate">
+                    {spec.title}
+                  </div>
+                  <div className="text-[11px] text-gray-400 truncate">
+                    {spec.subtitle}
+                  </div>
                 </div>
-                <p className="text-xs sm:text-sm text-gray-400 font-medium uppercase tracking-wider mt-2 group-hover:text-white transition-colors duration-300">
-                  {stat.label}
-                </p>
               </motion.div>
             );
           })}
@@ -866,17 +781,747 @@ function StatsSection() {
   );
 }
 
+function CategoryBentoGrid({ navigate }: { navigate: (path: string) => void }) {
+  return (
+    <section className="py-16 sm:py-24 bg-white dark:bg-[#030213] text-gray-900 dark:text-white transition-colors">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Section Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 sm:mb-14 gap-4">
+          <div>
+            <span className="text-xs sm:text-sm font-bold tracking-widest uppercase text-[#7FB706] mb-2 block">
+              Architectural Product Systems
+            </span>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight">
+              Engineered for Modern Commercial Spaces
+            </h2>
+          </div>
+          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 max-w-md">
+            Heavy-duty, high-privacy compact laminate washroom systems and storage solutions built to withstand extreme commercial footfall.
+          </p>
+        </div>
+
+        {/* Bento Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* Card 1: Restroom Cubicles (Span 2 cols on lg) */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            whileHover={{ y: -4 }}
+            onClick={() => navigate("/products/restroom-cubicles")}
+            className="md:col-span-2 lg:col-span-2 group relative rounded-3xl overflow-hidden bg-[#0a0a1a] border border-gray-200 dark:border-white/10 hover:border-[#7FB706]/50 shadow-xl cursor-pointer min-h-[380px] flex flex-col justify-end p-6 sm:p-8"
+          >
+            <div className="absolute inset-0 z-0">
+              <ImageWithFallback
+                src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80"
+                alt="Commercial Restroom Cubicle Systems"
+                className="w-full h-full object-cover object-center transform transition-transform duration-700 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+            </div>
+
+            <div className="relative z-10 space-y-3">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="px-3 py-1 rounded-full text-[11px] font-bold bg-[#7FB706] text-black uppercase tracking-wider">
+                  Flagship Product
+                </span>
+                <span className="px-3 py-1 rounded-full text-[11px] font-semibold bg-white/20 text-white backdrop-blur-md">
+                  12mm &amp; 18mm Board
+                </span>
+                <span className="px-3 py-1 rounded-full text-[11px] font-semibold bg-white/20 text-white backdrop-blur-md">
+                  SS 304 / Nylon / Aluminium
+                </span>
+              </div>
+              <h3 className="text-2xl sm:text-3xl font-bold text-white group-hover:text-[#B5F823] transition-colors">
+                Restroom Cubicle Systems
+              </h3>
+              <p className="text-xs sm:text-sm text-gray-300 max-w-xl leading-relaxed">
+                Floor-anchored, overhead-braced, and ceiling-hung privacy systems engineered with high-density solid compact laminate and anti-vandalism fittings.
+              </p>
+              <div className="pt-2 flex items-center text-sm font-bold text-[#7FB706] group-hover:text-[#B5F823] gap-2">
+                <span>Explore Cubicle Models</span>
+                <ArrowRight className="w-4 h-4 transform transition-transform group-hover:translate-x-1" />
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Card 2: Modular Lockers (Span 2 cols on lg) */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            whileHover={{ y: -4 }}
+            onClick={() => navigate("/products/lockers")}
+            className="md:col-span-2 lg:col-span-2 group relative rounded-3xl overflow-hidden bg-[#0a0a1a] border border-gray-200 dark:border-white/10 hover:border-[#7FB706]/50 shadow-xl cursor-pointer min-h-[380px] flex flex-col justify-end p-6 sm:p-8"
+          >
+            <div className="absolute inset-0 z-0">
+              <ImageWithFallback
+                src="https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=1200&q=80"
+                alt="Modular HPL Lockers"
+                className="w-full h-full object-cover object-center transform transition-transform duration-700 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+            </div>
+
+            <div className="relative z-10 space-y-3">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="px-3 py-1 rounded-full text-[11px] font-bold bg-indigo-500 text-white uppercase tracking-wider">
+                  Storage Systems
+                </span>
+                <span className="px-3 py-1 rounded-full text-[11px] font-semibold bg-white/20 text-white backdrop-blur-md">
+                  1 to 6 Tiers
+                </span>
+                <span className="px-3 py-1 rounded-full text-[11px] font-semibold bg-white/20 text-white backdrop-blur-md">
+                  Digital &amp; Cam Locks
+                </span>
+              </div>
+              <h3 className="text-2xl sm:text-3xl font-bold text-white group-hover:text-[#B5F823] transition-colors">
+                Modular HPL Locker Systems
+              </h3>
+              <p className="text-xs sm:text-sm text-gray-300 max-w-xl leading-relaxed">
+                Vandal-resistant, moisture-proof compact laminate lockers with concealed heavy-duty hinges and ventilation louvers for gyms, IT parks &amp; sports hubs.
+              </p>
+              <div className="pt-2 flex items-center text-sm font-bold text-[#7FB706] group-hover:text-[#B5F823] gap-2">
+                <span>Explore Locker Models</span>
+                <ArrowRight className="w-4 h-4 transform transition-transform group-hover:translate-x-1" />
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Card 3: Urinal Partitions (Span 2 cols on lg) */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            whileHover={{ y: -4 }}
+            onClick={() => navigate("/products/urinal-partitions")}
+            className="md:col-span-1 lg:col-span-2 group relative rounded-3xl overflow-hidden bg-[#0a0a1a] border border-gray-200 dark:border-white/10 hover:border-[#7FB706]/50 shadow-xl cursor-pointer min-h-[340px] flex flex-col justify-end p-6 sm:p-8"
+          >
+            <div className="absolute inset-0 z-0">
+              <ImageWithFallback
+                src="https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=1200&q=80"
+                alt="Urinal Partitions"
+                className="w-full h-full object-cover object-center transform transition-transform duration-700 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+            </div>
+
+            <div className="relative z-10 space-y-3">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="px-3 py-1 rounded-full text-[11px] font-bold bg-amber-500 text-black uppercase tracking-wider">
+                  Privacy Screens
+                </span>
+                <span className="px-3 py-1 rounded-full text-[11px] font-semibold bg-white/20 text-white backdrop-blur-md">
+                  Wall-Hung &amp; Floor Leg
+                </span>
+              </div>
+              <h3 className="text-xl sm:text-2xl font-bold text-white group-hover:text-[#B5F823] transition-colors">
+                Urinal Partition Screens
+              </h3>
+              <p className="text-xs sm:text-sm text-gray-300 leading-relaxed">
+                Floating wall-hung cantilever and floor-anchored modesty panels with beveled safety edges and Grade 304 SS brackets.
+              </p>
+              <div className="pt-2 flex items-center text-sm font-bold text-[#7FB706] group-hover:text-[#B5F823] gap-2">
+                <span>View Partitions</span>
+                <ArrowRight className="w-4 h-4 transform transition-transform group-hover:translate-x-1" />
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Card 4: Kids Toilet (Span 2 cols on lg) */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3 }}
+            whileHover={{ y: -4 }}
+            onClick={() => navigate("/products/kids-toilet")}
+            className="md:col-span-1 lg:col-span-2 group relative rounded-3xl overflow-hidden bg-[#0a0a1a] border border-gray-200 dark:border-white/10 hover:border-[#7FB706]/50 shadow-xl cursor-pointer min-h-[340px] flex flex-col justify-end p-6 sm:p-8"
+          >
+            <div className="absolute inset-0 z-0">
+              <ImageWithFallback
+                src="https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&w=1200&q=80"
+                alt="Kids & Preschool Toilet Cubicles"
+                className="w-full h-full object-cover object-center transform transition-transform duration-700 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+            </div>
+
+            <div className="relative z-10 space-y-3">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="px-3 py-1 rounded-full text-[11px] font-bold bg-rose-500 text-white uppercase tracking-wider">
+                  Child Safety First
+                </span>
+                <span className="px-3 py-1 rounded-full text-[11px] font-semibold bg-white/20 text-white backdrop-blur-md">
+                  Anti-Finger Pinch Gaps
+                </span>
+                <span className="px-3 py-1 rounded-full text-[11px] font-semibold bg-white/20 text-white backdrop-blur-md">
+                  Emergency Coin Turn
+                </span>
+              </div>
+              <h3 className="text-xl sm:text-2xl font-bold text-white group-hover:text-[#B5F823] transition-colors">
+                Kids &amp; Preschool Safety Cubicles
+              </h3>
+              <p className="text-xs sm:text-sm text-gray-300 leading-relaxed">
+                Ergonomic child-safe washroom cubicles designed with low-height doors, soft spring hinges, rounded corner profiles, and exterior emergency overrides.
+              </p>
+              <div className="pt-2 flex items-center text-sm font-bold text-[#7FB706] group-hover:text-[#B5F823] gap-2">
+                <span>View Kids Systems</span>
+                <ArrowRight className="w-4 h-4 transform transition-transform group-hover:translate-x-1" />
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function MaterialEngineeringDeepDive({ navigate }: { navigate: (path: string) => void }) {
+  return (
+    <section className="py-16 sm:py-24 bg-gray-50 dark:bg-[#060515] text-gray-900 dark:text-white transition-colors border-y border-gray-200 dark:border-white/5">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
+          <span className="text-xs sm:text-sm font-bold tracking-widest uppercase text-[#7FB706] mb-2 block">
+            Material Science &amp; Engineering
+          </span>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold">
+            Built from Solid Compact Laminate &amp; Commercial Hardware
+          </h2>
+          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mt-4 leading-relaxed">
+            Every Pacific system is fabricated using high-density solid phenolic core boards manufactured under 1400 PSI pressure and 150°C heat, paired with structural architectural hardware.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Card 1: 3-Layer Board Anatomy */}
+          <div className="bg-white dark:bg-[#0a0a1a] rounded-3xl p-6 sm:p-8 border border-gray-200 dark:border-white/10 shadow-lg space-y-6 flex flex-col justify-between">
+            <div className="space-y-4">
+              <div className="w-12 h-12 rounded-2xl bg-[#7FB706]/10 border border-[#7FB706]/20 flex items-center justify-center text-[#7FB706]">
+                <Layers className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                Solid Phenolic Core Board (12mm / 18mm)
+              </h3>
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                Homogeneous, thermosetting resins infused with multiple layers of kraft paper for absolute structural integrity:
+              </p>
+
+              <div className="space-y-3 pt-2">
+                <div className="p-3 rounded-2xl bg-gray-50 dark:bg-white/[0.03] border border-gray-100 dark:border-white/5">
+                  <div className="text-xs font-bold text-[#7FB706]">Top Layer</div>
+                  <div className="text-xs font-semibold text-gray-800 dark:text-gray-200 mt-0.5">Melamine Protective Overlay</div>
+                  <div className="text-[11px] text-gray-500 dark:text-gray-400">UV-resistant, scratch-proof &amp; anti-graffiti finish</div>
+                </div>
+
+                <div className="p-3 rounded-2xl bg-gray-50 dark:bg-white/[0.03] border border-gray-100 dark:border-white/5">
+                  <div className="text-xs font-bold text-[#7FB706]">Intermediate Layer</div>
+                  <div className="text-xs font-semibold text-gray-800 dark:text-gray-200 mt-0.5">Decorative Architectural Paper</div>
+                  <div className="text-[11px] text-gray-500 dark:text-gray-400">Solid brand shades, woodgrain textures, and stone patterns</div>
+                </div>
+
+                <div className="p-3 rounded-2xl bg-gray-50 dark:bg-white/[0.03] border border-gray-100 dark:border-white/5">
+                  <div className="text-xs font-bold text-[#7FB706]">Core Foundation</div>
+                  <div className="text-xs font-semibold text-gray-800 dark:text-gray-200 mt-0.5">Solid Phenolic Kraft Paper Core</div>
+                  <div className="text-[11px] text-gray-500 dark:text-gray-400">100% waterproof, zero delamination, Class 1 fire-rated</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-4 border-t border-gray-100 dark:border-white/10 flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 font-medium">
+              <span>Backed by 10-Year Warranty</span>
+              <ShieldCheck className="w-4 h-4 text-[#7FB706]" />
+            </div>
+          </div>
+
+          {/* Card 2: Triple Hardware Suite */}
+          <div className="bg-white dark:bg-[#0a0a1a] rounded-3xl p-6 sm:p-8 border border-gray-200 dark:border-white/10 shadow-lg space-y-6 flex flex-col justify-between">
+            <div className="space-y-4">
+              <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400">
+                <Wrench className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                Triple Hardware Engineering Suite
+              </h3>
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                Choose the exact fitting material that matches your project’s aesthetic and durability standards:
+              </p>
+
+              <div className="space-y-3 pt-2">
+                <div className="p-3 rounded-2xl bg-gray-50 dark:bg-white/[0.03] border border-gray-100 dark:border-white/5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-emerald-500">Grade 304 / 316 Stainless Steel</span>
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-semibold">Heavy Duty</span>
+                  </div>
+                  <div className="text-[11px] text-gray-500 dark:text-gray-400 mt-1">
+                    Available in Golden PVD, Matte Black, and Satin Brushed finishes. Anti-vandalism tensile strength.
+                  </div>
+                </div>
+
+                <div className="p-3 rounded-2xl bg-gray-50 dark:bg-white/[0.03] border border-gray-100 dark:border-white/5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-cyan-400">Polyamide Nylon Hardware</span>
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 font-semibold">Non-Corrosive</span>
+                  </div>
+                  <div className="text-[11px] text-gray-500 dark:text-gray-400 mt-1">
+                    High-density engineered nylon resistant to cleaning chemicals, harsh acids, moisture, and rust.
+                  </div>
+                </div>
+
+                <div className="p-3 rounded-2xl bg-gray-50 dark:bg-white/[0.03] border border-gray-100 dark:border-white/5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-slate-400">Aluminium Profiles</span>
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-500/10 text-slate-300 border border-slate-500/20 font-semibold">Structural</span>
+                  </div>
+                  <div className="text-[11px] text-gray-500 dark:text-gray-400 mt-1">
+                    Precision-extruded anodized headrails, U-channels, and door frame profiles for rigid alignment.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-4 border-t border-gray-100 dark:border-white/10 flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 font-medium">
+              <span>Backed by 1-Year Direct Replacement</span>
+              <CheckCircle2 className="w-4 h-4 text-cyan-400" />
+            </div>
+          </div>
+
+          {/* Card 3: 3D Visualizer & Customization */}
+          <div className="bg-gradient-to-br from-[#121226] to-[#0a0a1a] rounded-3xl p-6 sm:p-8 border border-white/10 shadow-lg space-y-6 flex flex-col justify-between text-white relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-[#7FB706]/10 rounded-full blur-3xl pointer-events-none" />
+
+            <div className="space-y-4 relative z-10">
+              <div className="w-12 h-12 rounded-2xl bg-[#B5F823]/10 border border-[#B5F823]/20 flex items-center justify-center text-[#B5F823]">
+                <Box className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-bold text-white">
+                Interactive 3D Configurator
+              </h3>
+              <p className="text-xs sm:text-sm text-gray-300 leading-relaxed">
+                Design your commercial restroom layout directly in your browser. Select compact board thicknesses, test finish swatches, choose hardware grades, and export your setup.
+              </p>
+
+              <div className="space-y-2.5 pt-2">
+                {[
+                  "Live 3D cubicle model rendering",
+                  "Finish swatches: Woodgrains, solids & textures",
+                  "Hardware finish toggles (Golden, Black, SS)",
+                  "Instant specification summary & BOQ ready",
+                ].map((item, i) => (
+                  <div key={i} className="flex items-center gap-2.5 text-xs text-gray-300">
+                    <Check className="w-4 h-4 text-[#7FB706] shrink-0" />
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="pt-6 relative z-10">
+              <Button
+                size="lg"
+                className="w-full bg-[#7FB706] hover:bg-[#6fa005] text-black font-bold flex items-center justify-center gap-2"
+                onClick={() => navigate("/configure-cubicle")}
+              >
+                <span>Launch 3D Configurator</span>
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function CommercialTypologyExplorer({ navigate }: { navigate: (path: string) => void }) {
+  const typologies = [
+    {
+      icon: Plane,
+      title: "Airports & Transit Hubs",
+      desc: "Heavy-duty anti-vandalism cubicles engineered for 24/7 non-stop throughput with continuous top headrail extrusions.",
+      badge: "High Vandal Resistance",
+    },
+    {
+      icon: Building,
+      title: "Corporate IT Parks & Offices",
+      desc: "Executive full-height privacy cubicles featuring Golden PVD / Matte Black fittings and premium acoustic dampening.",
+      badge: "Grade-A Workspaces",
+    },
+    {
+      icon: ShoppingBag,
+      title: "Shopping Malls & Retail Hubs",
+      desc: "Chemical-resistant, graffiti-proof partitions built for rapid sanitization cycles and high footfall durability.",
+      badge: "Rapid Sanitization",
+    },
+    {
+      icon: HeartPulse,
+      title: "Hospitals & Healthcare Facilities",
+      desc: "Non-porous, antibacterial solid phenolic laminate surfaces impervious to hospital-grade disinfectants and steam.",
+      badge: "Anti-Microbial / Non-Porous",
+    },
+    {
+      icon: Hotel,
+      title: "Luxury Hotels & Resorts",
+      desc: "Sleek designer textures with woodgrain laminates, minimalist gap clearances, and architectural hardware.",
+      badge: "Architectural Luxury",
+    },
+    {
+      icon: GraduationCap,
+      title: "Educational Institutes & Gyms",
+      desc: "100% moisture-proof, water-resistant cubicles and lockers with safety hinges and rounded impact-resistant corners.",
+      badge: "Impact & Moisture Proof",
+    },
+  ];
+
+  return (
+    <section className="py-16 sm:py-24 bg-white dark:bg-[#030213] text-gray-900 dark:text-white transition-colors">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
+          <span className="text-xs sm:text-sm font-bold tracking-widest uppercase text-[#7FB706] mb-2 block">
+            Targeted Building Typologies
+          </span>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold">
+            Tailored Engineering for Every Architecture
+          </h2>
+          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mt-4 leading-relaxed">
+            From transit terminals with tens of thousands of daily commuters to luxury hospitality suites, our systems are calibrated to the rigorous demands of your facility.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {typologies.map((t, idx) => {
+            const Icon = t.icon;
+            return (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.08, duration: 0.4 }}
+                whileHover={{ y: -4 }}
+                className="p-6 sm:p-7 rounded-3xl bg-gray-50 dark:bg-[#0a0a1a] border border-gray-200 dark:border-white/10 hover:border-[#7FB706]/40 transition-all shadow-md group flex flex-col justify-between"
+              >
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="w-12 h-12 rounded-2xl bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 flex items-center justify-center text-[#7FB706] group-hover:scale-110 group-hover:bg-[#7FB706]/10 transition-all">
+                      <Icon className="w-6 h-6" />
+                    </div>
+                    <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-[#7FB706]/10 text-[#7FB706] border border-[#7FB706]/20 uppercase tracking-wide">
+                      {t.badge}
+                    </span>
+                  </div>
+                  <h3 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-[#7FB706] transition-colors">
+                    {t.title}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                    {t.desc}
+                  </p>
+                </div>
+
+                <div 
+                  onClick={() => navigate("/products/restroom-cubicles")}
+                  className="pt-5 mt-4 border-t border-gray-200/60 dark:border-white/5 flex items-center text-xs font-bold text-[#7FB706] gap-1.5 group-hover:gap-2.5 transition-all cursor-pointer"
+                >
+                  <span>Explore Solutions</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ModernTurnkeyProcess() {
+  const steps = [
+    {
+      num: "01",
+      title: "Space Planning & CAD BOQ",
+      desc: "Share your floor plan or architectural drawings (.dwg/.pdf). We generate 2D layouts, elevation renders, and an itemized component BOQ within 24 hours.",
+      icon: Compass,
+      tag: "24-Hr Turnaround",
+    },
+    {
+      num: "02",
+      title: "CNC Precision Milling",
+      desc: "Panels are cut, routed, and edge-beveled on computerized multi-axis CNC machines with millimeter tolerance for flawless alignment.",
+      icon: Ruler,
+      tag: "Millimeter Precision",
+    },
+    {
+      num: "03",
+      title: "Dry-Fit QC Inspection",
+      desc: "Prior to packaging, cubicle assemblies undergo test dry-fitting, hinge stress verification, and hardware quality signoff at our ISO facility.",
+      icon: ShieldCheck,
+      tag: "Zero-Defect QA",
+    },
+    {
+      num: "04",
+      title: "Pan-India Turnkey Installation",
+      desc: "Flat-pack delivered in moisture-barrier film with factory-certified installation technicians dispatched for clean, zero-disruption site execution.",
+      icon: Truck,
+      tag: "Pan-India Certified",
+    },
+  ];
+
+  return (
+    <section className="py-16 sm:py-24 bg-gray-50 dark:bg-[#060515] text-gray-900 dark:text-white transition-colors border-y border-gray-200 dark:border-white/5">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
+          <span className="text-xs sm:text-sm font-bold tracking-widest uppercase text-[#7FB706] mb-2 block">
+            Turnkey Delivery Framework
+          </span>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold">
+            From Architectural Drawing to Live Installation
+          </h2>
+          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mt-4 leading-relaxed">
+            Our streamlined engineering pipeline ensures timely project delivery, zero site rework, and complete alignment with your architectural specifications.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative">
+          {steps.map((step, idx) => {
+            const Icon = step.icon;
+            return (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.1, duration: 0.5 }}
+                className="relative p-6 sm:p-7 rounded-3xl bg-white dark:bg-[#0a0a1a] border border-gray-200 dark:border-white/10 shadow-lg flex flex-col justify-between group hover:border-[#7FB706]/40 transition-all"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-3xl font-extrabold font-mono text-[#7FB706]/30 group-hover:text-[#7FB706] transition-colors">
+                      {step.num}
+                    </span>
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-gray-100 dark:bg-white/5 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-white/10">
+                      {step.tag}
+                    </span>
+                  </div>
+
+                  <div className="w-10 h-10 rounded-xl bg-[#7FB706]/10 flex items-center justify-center text-[#7FB706] mb-4">
+                    <Icon className="w-5 h-5" />
+                  </div>
+
+                  <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
+                    {step.title}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                    {step.desc}
+                  </p>
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function WhyChooseUsSection({ navigate }: { navigate: (path: string) => void }) {
+  const points = [
+    "ISO 9001:2015 certified precision manufacturing",
+    "Solid compact laminate boards with Class 1 fire retardancy",
+    "Dual Warranty: 10-year board & 1-year direct hardware replacement",
+    "Pan-India certified installation network across 20+ states",
+    "Dedicated after-sales support & stock replacement guarantee",
+  ];
+
+  return (
+    <section className="py-16 sm:py-24 bg-white dark:bg-[#030213] transition-colors">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+          >
+            <span className="text-xs sm:text-sm font-bold tracking-widest uppercase text-[#7FB706] mb-2 block">
+              Architectural Reliability
+            </span>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6">
+              Why Commercial Projects Choose Pacific
+            </h2>
+            <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 mb-6 sm:mb-8 leading-relaxed">
+              With over 12 years of specialized engineering, Pacific Restroom Cubicles delivers uncompromising structural durability, aesthetic refinement, and guaranteed compliance for India's leading architectural projects.
+            </p>
+            <div className="space-y-3 sm:space-y-4">
+              {points.map((point, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.08 }}
+                  className="flex items-start gap-3"
+                >
+                  <CheckCircle2 className="w-5 h-5 sm:w-6 sm:h-6 text-[#7FB706] flex-shrink-0 mt-0.5" />
+                  <span className="text-sm sm:text-base text-gray-700 dark:text-gray-300 font-medium">{point}</span>
+                </motion.div>
+              ))}
+            </div>
+            <div className="mt-8 flex flex-wrap gap-4">
+              <Button size="lg" onClick={() => navigate("/about")}>
+                Learn More About Us
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </Button>
+              <Button size="lg" variant="outline" onClick={() => navigate("/contact")}>
+                Contact Engineering Desk
+              </Button>
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="relative mt-6 lg:mt-0"
+          >
+            <div className="relative rounded-3xl overflow-hidden aspect-[4/3] sm:aspect-[16/11] border border-gray-200 dark:border-white/10 shadow-2xl">
+              <ImageWithFallback
+                src="https://images.unsplash.com/photo-1497366216548-37526070297c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
+                alt="Pacific Restroom Cubicle Architectural Installation"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+            </div>
+            <div className="absolute -bottom-6 -left-4 sm:-bottom-6 sm:-left-6 bg-[#030213] border border-[#7FB706]/40 text-white rounded-3xl p-5 sm:p-7 shadow-2xl backdrop-blur-xl">
+              <div className="text-3xl sm:text-4xl font-extrabold text-[#B5F823]">12+</div>
+              <div className="text-xs sm:text-sm text-gray-300 font-medium mt-1">Years of Manufacturing Excellence</div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ArchitectBOMToolkit({ navigate }: { navigate: (path: string) => void }) {
+  return (
+    <section className="py-12 sm:py-16 bg-white dark:bg-[#030213] text-gray-900 dark:text-white transition-colors">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="p-8 sm:p-12 rounded-3xl bg-gradient-to-br from-[#121226] via-[#0a0a1a] to-[#030213] border border-[#7FB706]/30 shadow-2xl relative overflow-hidden text-white">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-[#7FB706]/10 rounded-full blur-3xl pointer-events-none" />
+
+          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            <div className="lg:col-span-8 space-y-4">
+              <span className="px-3 py-1 rounded-full text-xs font-bold bg-[#7FB706]/20 text-[#B5F823] border border-[#7FB706]/30 uppercase tracking-wider inline-flex items-center gap-1.5">
+                <FileSpreadsheet className="w-3.5 h-3.5" />
+                Architect &amp; Contractor Toolkit
+              </span>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight">
+                Need an Itemized BOQ &amp; Architectural Layout for Your Project?
+              </h2>
+              <p className="text-sm sm:text-base text-gray-300 max-w-2xl leading-relaxed">
+                Submit your floor plans, CAD drawings (<code className="text-[#B5F823]">.dwg</code>, <code className="text-[#B5F823]">.pdf</code>), or rough cubicle dimensions. Our technical estimation desk will prepare a comprehensive quotation with complete hardware specifications in 24 hours.
+              </p>
+              <div className="flex flex-wrap items-center gap-4 pt-2 text-xs text-gray-400">
+                <div className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-4 h-4 text-[#7FB706]" />
+                  <span>Free CAD Layout &amp; Estimation</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-4 h-4 text-[#7FB706]" />
+                  <span>Pan-India Supply &amp; Install Support</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-4 h-4 text-[#7FB706]" />
+                  <span>Samples &amp; Finishes Sent on Request</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="lg:col-span-4 flex flex-col sm:flex-row lg:flex-col gap-3 justify-center">
+              <Button
+                size="lg"
+                className="bg-[#7FB706] hover:bg-[#6fa005] text-black font-bold flex items-center justify-center gap-2"
+                onClick={() => navigate("/contact")}
+              >
+                <span>Request Project BOQ</span>
+                <ArrowRight className="w-5 h-5" />
+              </Button>
+              <button
+                type="button"
+                onClick={() => window.open("https://wa.me/919818592113", "_blank")}
+                className="px-6 py-3.5 rounded-xl border border-white/20 hover:border-[#7FB706] bg-white/5 hover:bg-white/10 text-white font-semibold text-sm flex items-center justify-center gap-2 transition min-h-[44px]"
+              >
+                <span>WhatsApp Architectural Desk</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function FinalCtaSection({ navigate }: { navigate: (path: string) => void }) {
+  return (
+    <section className="py-16 sm:py-20 lg:py-24 bg-gradient-to-br from-[#7FB706] to-[#6fa005] text-white relative overflow-hidden">
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute top-0 left-0 w-48 sm:w-72 lg:w-96 h-48 sm:h-72 lg:h-96 bg-white rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-0 w-48 sm:w-72 lg:w-96 h-48 sm:h-72 lg:h-96 bg-[#B5F823] rounded-full blur-3xl" />
+      </div>
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center max-w-4xl mx-auto"
+        >
+          <span className="px-3.5 py-1.5 rounded-full text-xs font-bold bg-white/20 text-white uppercase tracking-wider backdrop-blur-md inline-block mb-4">
+            Turnkey Restroom Solutions
+          </span>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-4 sm:mb-6 tracking-tight">
+            Ready to Specify Pacific for Your Next Project?
+          </h2>
+          <p className="text-base sm:text-lg lg:text-xl mb-8 opacity-95 max-w-2xl mx-auto leading-relaxed">
+            Get in touch with our technical team for custom CAD layouts, material samples, and detailed itemized BOQ pricing.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Button
+              size="lg"
+              variant="secondary"
+              className="w-full sm:w-auto font-bold px-8 shadow-xl min-h-[44px]"
+              onClick={() => navigate("/contact")}
+            >
+              Get Free Quote
+              <ArrowRight className="w-5 h-5 ml-2" />
+            </Button>
+            <button
+              type="button"
+              onClick={() => window.open("https://wa.me/919818592113", "_blank")}
+              className="inline-flex items-center justify-center w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg bg-white text-[#7FB706] rounded-xl hover:bg-gray-100 transition-all duration-300 hover:scale-105 font-bold shadow-xl min-h-[44px]"
+            >
+              <svg className="w-5 h-5 sm:w-6 sm:h-6 mr-2 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+              </svg>
+              WhatsApp Us
+            </button>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+// ── Master HomePage Component ──────────────────────────────────
+
 export default function HomePage() {
   const navigate = useNavigate();
-
-  const { data: solutions, loading: loadingSolutions } = useSolutions();
-  const { data: coreServices, loading: loadingCoreServices } = useCoreServices();
 
   return (
     <div className="min-h-screen">
       <SEO
-        title="Restroom Cubicles Manufacturer India | Toilet Partitions, Cladding & Lockers"
-        description="Pacific Products & Solutions — India's #1 manufacturer of restroom cubicles, toilet partitions, exterior cladding, locker systems & custom hardware. ISO 9001:2015 certified. 600+ projects across Delhi, Mumbai, Bangalore & Dubai. Get a free quote today."
+        title="Restroom Cubicles Manufacturer India | Toilet Partitions, Cladding &amp; Lockers"
+        description="Pacific Products &amp; Solutions — India's #1 manufacturer of restroom cubicles, toilet partitions, exterior cladding, locker systems &amp; custom hardware. ISO 9001:2015 certified. Pan-India turnkey installation. Get a free quote today."
         keywords={`${DEFAULT_KEYWORDS}, restroom cubicles manufacturer Delhi, toilet partitions manufacturer India, exterior cladding supplier India, HPL cubicle system, locker system supplier India, compact laminate partitions`}
         canonical="/"
         jsonLd={[
@@ -887,269 +1532,41 @@ export default function HomePage() {
           faqSchema([
             { question: "What products does Pacific Products & Solutions manufacture?", answer: "Pacific Products & Solutions manufactures premium restroom cubicles, toilet partitions, shower cubicles, exterior cladding, locker systems, wall paneling, and custom hardware for commercial spaces across India and the UAE." },
             { question: "Where is Pacific Products & Solutions located?", answer: "Pacific Products & Solutions has offices in Delhi (head office), Mumbai, Bangalore, Ahmedabad, Kolkata, and Dubai UAE. They serve pan-India and international clients." },
-            { question: "What is the warranty on Pacific Products installations?", answer: "All Pacific Products installations come with a 5-year comprehensive warranty covering manufacturing defects, with extended warranty options available." },
+            { question: "What is the warranty on Pacific Products installations?", answer: "All Pacific Products installations come with a 10-year compact board warranty and a 1-year direct hardware replacement warranty." },
           ])
         ]}
       />
-      <h1 className="sr-only">Pacific Products & Solutions — Premium Restroom Cubicles, Cladding & Interior Solutions</h1>
+      <h1 className="sr-only">Pacific Products &amp; Solutions — Premium Restroom Cubicles, Cladding &amp; Interior Solutions</h1>
 
-      {/* ══════════════════════════════════════════════════════
-          HERO — untouched
-      ══════════════════════════════════════════════════════ */}
+      {/* 1. Hero Section */}
       <HeroSection />
 
-      {/* ══════════════════════════════════════════════════════
-          NEW: STATS BANNER
-      ══════════════════════════════════════════════════════ */}
-      <StatsSection />
+      {/* 2. Architectural Standards & Specification Strip (Replaced Stats Banner) */}
+      <ArchitecturalTrustStrip />
 
-      {/* ══════════════════════════════════════════════════════
-          FEATURED PRODUCTS
-      ══════════════════════════════════════════════════════ */}
+      {/* 3. 4-Category Architectural Bento Grid (Replaced generic services/solutions) */}
+      <CategoryBentoGrid navigate={navigate} />
+
+      {/* 4. Featured Architectural Models (Live from Supabase) */}
       <FeaturedServices />
 
-      {/* ══════════════════════════════════════════════════════
-          OUR SOLUTIONS
-      ══════════════════════════════════════════════════════ */}
-      <section className="py-16 sm:py-24 bg-[#f7fef0] dark:bg-[#0a0a1a] transition-colors overflow-hidden">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 sm:mb-16 gap-4"
-          >
-            <div>
-              <p className="text-base sm:text-lg lg:text-xl text-gray-600 dark:text-gray-400 max-w-2xl">
-                Industry-specific solutions tailored to meet your unique requirements
-              </p>
-            </div>
-            {/* Desktop scroll buttons */}
-            {solutions && solutions.length > 0 && (() => {
-              const scrollRef = { current: null as HTMLDivElement | null };
-              const scroll = (dir: 'left' | 'right') => {
-                if (scrollRef.current) {
-                  const card = scrollRef.current.querySelector('[data-sol-card]') as HTMLElement;
-                  const w = card ? card.offsetWidth + 24 : 360;
-                  scrollRef.current.scrollBy({ left: dir === 'left' ? -w : w, behavior: 'smooth' });
-                }
-              };
-              return null;
-            })()}
-          </motion.div>
+      {/* 5. Material & Engineering Deep-Dive (Solid Phenolic Core & Hardware Matrix) */}
+      <MaterialEngineeringDeepDive navigate={navigate} />
 
-          {loadingSolutions ? (
-            <div className="text-center text-gray-500 py-10">Loading solutions...</div>
-          ) : solutions && solutions.length > 0 ? (
-            <SolutionsCarousel solutions={solutions} navigate={navigate} />
-          ) : (
-            <div className="text-center text-gray-500 py-10">
-              No solutions yet. Add some from the Admin Dashboard!
-            </div>
-          )}
-        </div>
-      </section>
+      {/* 6. Commercial Typology Explorer (Airports, IT Parks, Malls, Healthcare, etc.) */}
+      <CommercialTypologyExplorer navigate={navigate} />
 
-      {/* Process Section */}
-      <section className="py-12 sm:py-16 md:py-20 lg:py-24 bg-gradient-to-b from-[#E9FDBF]/30 to-white dark:from-[#0a0a1a] dark:to-[#030213] transition-colors">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-10 sm:mb-14 lg:mb-16"
-          >
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-[#030213] dark:text-white mb-3 sm:mb-4">
-              Our Process
-            </h2>
-            <p className="text-base sm:text-lg lg:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto px-2">
-              A streamlined approach from consultation to installation
-            </p>
-          </motion.div>
+      {/* 7. Modern Turnkey Engineering Process Stepper (CAD to Installation) */}
+      <ModernTurnkeyProcess />
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
-            {[
-              { step: "01", title: "Consultation", description: "We discuss your requirements, space constraints, and design preferences." },
-              { step: "02", title: "Design & Quote", description: "Our team creates custom designs and provides a detailed, transparent quote." },
-              { step: "03", title: "Manufacturing", description: "Products are precision-manufactured in our ISO-certified facility." },
-              { step: "04", title: "Installation", description: "Professional installation by our trained team with minimal disruption." },
-            ].map((process, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="relative pb-8 lg:pb-0"
-              >
-                <div className="bg-gradient-to-br from-[#E9FDBF] to-white dark:from-[#030213] dark:to-[#0a0a1a] rounded-2xl p-6 sm:p-8 border border-[#7FB706]/20 dark:border-white/10 h-full">
-                  <div className="text-4xl sm:text-5xl lg:text-6xl font-bold text-[#7FB706]/20 mb-3 sm:mb-4">
-                    {process.step}
-                  </div>
-                  <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold text-[#030213] dark:text-white mb-2 sm:mb-3">
-                    {process.title}
-                  </h3>
-                  <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">{process.description}</p>
-                  <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-8 h-8 bg-[#7FB706] rounded-full flex items-center justify-center">
-                    <CheckCircle2 className="w-5 h-5 text-white" />
-                  </div>
-                </div>
-                {index < 3 && (
-                  <div className="hidden lg:block absolute top-1/2 -right-4 w-8 h-0.5 bg-[#7FB706]/30 z-10" />
-                )}
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* 8. Why Choose Pacific Products & Solutions */}
+      <WhyChooseUsSection navigate={navigate} />
 
-      {/* Our Core Services */}
-      <section className="py-12 sm:py-16 md:py-20 lg:py-24 bg-transparent dark:bg-[#030213] transition-colors">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-10 sm:mb-14 lg:mb-16"
-          >
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-[#030213] dark:text-white mb-3 sm:mb-4">
-              Our Core Services
-            </h2>
-            <p className="text-base sm:text-lg lg:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto px-2">
-              Comprehensive interior contracting solutions engineered for excellence
-            </p>
-          </motion.div>
+      {/* 9. Architect & Contractor BOQ Toolkit (High-Intent Conversion Card) */}
+      <ArchitectBOMToolkit navigate={navigate} />
 
-          {loadingCoreServices ? (
-            <div className="text-center text-gray-500 py-10">Loading core services...</div>
-          ) : coreServices.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-              {coreServices.map((service, index) => (
-                <CoreServiceCard key={service.id} service={service} index={index} />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center text-gray-500 py-10">
-              No core services yet. Add some from the Admin Dashboard!
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* Why Choose Us */}
-      <section className="py-12 sm:py-16 md:py-20 lg:py-24 bg-transparent dark:bg-[#030213] transition-colors">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-            >
-              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-[#030213] dark:text-white mb-4 sm:mb-6">
-                Why Choose Pacific Products?
-              </h2>
-              <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 mb-6 sm:mb-8">
-                With over 12 years of experience, we deliver unmatched quality and
-                innovation in every project we undertake.
-              </p>
-              <div className="space-y-3 sm:space-y-4">
-                {[
-                  "ISO certified manufacturing processes",
-                  "Custom design and engineering capabilities",
-                  "Pan-India installation network",
-                  "10-year board & 1-year hardware warranty",
-                  "Dedicated after-sales support",
-                ].map((point, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.1 }}
-                    className="flex items-start gap-3"
-                  >
-                    <CheckCircle2 className="w-5 h-5 sm:w-6 sm:h-6 text-[#7FB706] flex-shrink-0 mt-0.5" />
-                    <span className="text-sm sm:text-base text-gray-700 dark:text-gray-300">{point}</span>
-                  </motion.div>
-                ))}
-              </div>
-              <div className="mt-6 sm:mt-8">
-                <Button size="lg" onClick={() => navigate("/about")}>
-                  Learn More About Us
-                  <ArrowRight className="w-5 h-5 ml-2" />
-                </Button>
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="relative mt-6 lg:mt-0"
-            >
-              <div className="relative rounded-2xl overflow-hidden aspect-[4/3] sm:aspect-[16/10]">
-                <ImageWithFallback
-                  src="https://images.unsplash.com/photo-1497366216548-37526070297c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
-                  alt="Modern office interior"
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-br from-[#7FB706]/20 to-transparent" />
-              </div>
-              <div className="absolute -bottom-4 -left-4 bg-[#7FB706] text-white rounded-2xl p-4 sm:p-6 shadow-xl">
-                <div className="text-2xl sm:text-3xl font-bold">12+</div>
-                <div className="text-xs sm:text-sm opacity-90">Years of Excellence</div>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <TestimonialCarousel />
-
-      {/* CTA Section */}
-      <section className="py-12 sm:py-16 md:py-20 lg:py-24 bg-gradient-to-br from-[#7FB706] to-[#6fa005] text-white relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 left-0 w-48 sm:w-72 lg:w-96 h-48 sm:h-72 lg:h-96 bg-white rounded-full blur-3xl" />
-          <div className="absolute bottom-0 right-0 w-48 sm:w-72 lg:w-96 h-48 sm:h-72 lg:h-96 bg-[#B5F823] rounded-full blur-3xl" />
-        </div>
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center max-w-4xl mx-auto"
-          >
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6">
-              Ready to Transform Your Space?
-            </h2>
-            <p className="text-base sm:text-lg lg:text-xl mb-6 sm:mb-8 opacity-90 px-2">
-              Get in touch with our team for a free consultation and detailed quote for your project
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center">
-              <Button
-                size="lg"
-                variant="secondary"
-                className="w-full sm:w-auto"
-                onClick={() => navigate("/contact")}
-              >
-                Get Free Quote
-                <ArrowRight className="w-5 h-5 ml-2" />
-              </Button>
-              <button
-                onClick={() => window.open("https://wa.me/919818592113", "_blank")}
-                className="inline-flex items-center justify-center w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg bg-white text-[#7FB706] rounded-xl hover:bg-gray-100 transition-all duration-300 hover:scale-105 font-medium"
-              >
-                <svg className="w-5 h-5 sm:w-6 sm:h-6 mr-2 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-                </svg>
-                WhatsApp Us
-              </button>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
+      {/* 10. High-Conversion Final CTA Banner */}
+      <FinalCtaSection navigate={navigate} />
     </div>
   );
 }
