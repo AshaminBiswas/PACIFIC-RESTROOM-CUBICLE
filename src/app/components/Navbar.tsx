@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from "motion/react";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { Button } from "./Button";
 import { ThemeToggle } from "./ThemeToggle";
-import { useProducts, useSolutions } from "../../lib/hooks";
 // @ts-ignore
 import logo from "../../../public/logo.png";
 
@@ -15,9 +14,6 @@ export function Navbar() {
   const [activeMobileDropdown, setActiveMobileDropdown] = useState<string | null>(null);
   const location = useLocation();
   const navigate = useNavigate();
-
-  const { data: products } = useProducts();
-  const { data: solutions } = useSolutions();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -45,46 +41,10 @@ export function Navbar() {
     };
   }, [isMobileMenuOpen]);
 
-  const menuItems = [
+  const menuItems: Array<{ name: string; path: string; dropdown?: Array<{ name: string; path: string }> }> = [
     { name: "Home", path: "/" },
     { name: "About", path: "/about" },
-    {
-      name: "Services",
-      path: "/products",
-      dropdown: products && products.length > 0
-        ? Array.from(new Set(products.map(p => p.category).filter(Boolean))).map(category => ({
-          name: category,
-          path: `/products?category=${encodeURIComponent(category)}`
-        }))
-        : [
-          { name: "Restroom Cubicles", path: "/products?category=Restroom%20Cubicles" },
-          { name: "Shower Cubicles", path: "/products?category=Shower%20Cubicles" },
-          { name: "Exterior Cladding", path: "/products?category=Exterior%20Cladding" },
-          { name: "Locker System", path: "/products?category=Locker%20System" },
-          { name: "Custom Hardware", path: "/products?category=Custom%20Hardware" },
-          { name: "Others", path: "/products?category=Others" }
-        ],
-    },
-    {
-      name: "Solutions",
-      path: "/solutions",
-      dropdown: solutions && solutions.length > 0
-        ? Array.from(new Set(solutions.map(s => s.title).filter(Boolean))).map(title => ({
-          name: title,
-          path: `/solutions?industry=${encodeURIComponent(title)}`
-        }))
-        : [
-          { name: "Corporates", path: "/solutions?industry=Corporates" },
-          { name: "Malls", path: "/solutions?industry=Malls" },
-          { name: "Airports", path: "/solutions?industry=Airports" },
-          { name: "Metro and railways", path: "/solutions?industry=Metro%20and%20railways" },
-          { name: "Hospitals", path: "/solutions?industry=Hospitals" },
-          { name: "Schools & Colleges", path: "/solutions?industry=Schools%20%26%20Colleges" },
-          { name: "Others", path: "/solutions?industry=Others" }
-        ],
-    },
-    { name: "Gallery", path: "/gallery" },
-    { name: "Contact", path: "/contact" },
+    { name: "Cubicles, Lockers, Urinal Partitions", path: "/admin/dashboard/products" },
   ];
 
   const toggleMobileDropdown = (name: string) => {

@@ -260,3 +260,16 @@ npm run build
 npm test
 # Executes Vitest suite in jsdom environment, verifying cache behaviors and data integrity contracts
 ```
+
+---
+
+## 8. Navbar Restructuring: Streamlined Navigation
+
+- **Navigation Simplification**: Replaced the legacy four separate navigation items (`Solutions` -> `/solutions`, `Gallery` -> `/gallery`, `Contact` -> `/contact`, `Services` -> `/products`) with a consolidated core category navigation item:
+  - **"Cubicles, Lockers, Urinal Partitions"** directly linking to `/admin/dashboard/products`.
+- **Menu Hierarchy**:
+  - `Home` (`/`)
+  - `About` (`/about`)
+  - `Cubicles, Lockers, Urinal Partitions` (`/admin/dashboard/products`)
+  - `Get Quote` CTA (`/contact`) & Theme Switcher preserved across desktop and mobile menus.
+
