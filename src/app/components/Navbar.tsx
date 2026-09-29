@@ -85,21 +85,29 @@ export function Navbar() {
     };
   }, [isMobileMenuOpen]);
 
-  // Categorize products for dropdowns
-  const cubicleProducts = allProducts.filter(
+  // Only show listed model data from database, strictly removing all dummy/demo products
+  const listedProducts = (allProducts || []).filter(
+    (p) =>
+      p.published !== false &&
+      !p.id?.startsWith("prod-") &&
+      !p.id?.startsWith("demo-")
+  );
+
+  // Categorize real listed products for dropdowns
+  const cubicleProducts = listedProducts.filter(
     (p) =>
       (p.category || "").toLowerCase().includes("cubicle") &&
       !(p.category || "").toLowerCase().includes("kid")
   );
-  const lockerProducts = allProducts.filter((p) =>
+  const lockerProducts = listedProducts.filter((p) =>
     (p.category || "").toLowerCase().includes("locker")
   );
-  const urinalProducts = allProducts.filter(
+  const urinalProducts = listedProducts.filter(
     (p) =>
       (p.category || "").toLowerCase().includes("urinal") ||
       (p.category || "").toLowerCase().includes("partition")
   );
-  const kidsProducts = allProducts.filter((p) =>
+  const kidsProducts = listedProducts.filter((p) =>
     (p.category || "").toLowerCase().includes("kid")
   );
 
@@ -301,41 +309,49 @@ export function Navbar() {
                         </div>
 
                         {/* Model List */}
-                        <div
-                          className={`max-h-[62vh] overflow-y-auto ${
-                            item.dropdownColumns === 2
-                              ? "grid grid-cols-2 gap-1"
-                              : "space-y-1"
-                          }`}
-                        >
-                          {item.dropdown.map((subItem) => {
-                            const isCurrentProduct = location.pathname === subItem.path;
-                            return (
-                              <Link
-                                key={subItem.name + subItem.path}
-                                to={subItem.path}
-                                onClick={() => setActiveDropdown(null)}
-                                className={`group flex flex-col p-2.5 rounded-xl transition-all ${
-                                  isCurrentProduct
-                                    ? "bg-[#E9FDBF] dark:bg-[#7FB706]/25 text-[#7FB706]"
-                                    : "hover:bg-[#E9FDBF]/60 dark:hover:bg-[#7FB706]/15 text-[#030213] dark:text-gray-200"
-                                }`}
-                              >
-                                <div className="flex items-center justify-between gap-1">
-                                  <span className="font-semibold text-xs xl:text-sm group-hover:text-[#7FB706] transition-colors line-clamp-1">
-                                    {subItem.name}
-                                  </span>
-                                  <ArrowRight className="w-3.5 h-3.5 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 text-[#7FB706] transition-all flex-shrink-0" />
-                                </div>
-                                {subItem.subtitle && (
-                                  <span className="text-[11px] text-gray-500 dark:text-gray-400 line-clamp-1 mt-0.5 leading-tight">
-                                    {subItem.subtitle}
-                                  </span>
-                                )}
-                              </Link>
-                            );
-                          })}
-                        </div>
+                        {item.dropdown && item.dropdown.length > 0 ? (
+                          <div
+                            className={`max-h-[62vh] overflow-y-auto ${
+                              item.dropdownColumns === 2
+                                ? "grid grid-cols-2 gap-1"
+                                : "space-y-1"
+                            }`}
+                          >
+                            {item.dropdown.map((subItem) => {
+                              const isCurrentProduct = location.pathname === subItem.path;
+                              return (
+                                <Link
+                                  key={subItem.name + subItem.path}
+                                  to={subItem.path}
+                                  onClick={() => setActiveDropdown(null)}
+                                  className={`group flex flex-col p-2.5 rounded-xl transition-all ${
+                                    isCurrentProduct
+                                      ? "bg-[#E9FDBF] dark:bg-[#7FB706]/25 text-[#7FB706]"
+                                      : "hover:bg-[#E9FDBF]/60 dark:hover:bg-[#7FB706]/15 text-[#030213] dark:text-gray-200"
+                                  }`}
+                                >
+                                  <div className="flex items-center justify-between gap-1">
+                                    <span className="font-semibold text-xs xl:text-sm group-hover:text-[#7FB706] transition-colors line-clamp-1">
+                                      {subItem.name}
+                                    </span>
+                                    <ArrowRight className="w-3.5 h-3.5 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 text-[#7FB706] transition-all flex-shrink-0" />
+                                  </div>
+                                  {subItem.subtitle && (
+                                    <span className="text-[11px] text-gray-500 dark:text-gray-400 line-clamp-1 mt-0.5 leading-tight">
+                                      {subItem.subtitle}
+                                    </span>
+                                  )}
+                                </Link>
+                              );
+                            })}
+                          </div>
+                        ) : (
+                          <div className="py-6 px-4 text-center">
+                            <p className="text-xs text-gray-500 dark:text-gray-400">
+                              No {item.name} models listed yet.
+                            </p>
+                          </div>
+                        )}
 
                         {/* Dropdown Footer CTA */}
                         {item.viewAllPath && (
@@ -457,28 +473,34 @@ export function Navbar() {
                               className="overflow-hidden"
                             >
                               <div className="mt-1 ml-4 pl-4 border-l-2 border-[#7FB706]/30 space-y-1 pb-2">
-                                {item.dropdown.map((subItem) => (
-                                  <Link
-                                    key={subItem.name + subItem.path}
-                                    to={subItem.path}
-                                    onClick={() => {
-                                      setIsMobileMenuOpen(false);
-                                      setActiveMobileDropdown(null);
-                                    }}
-                                    className={`block px-3 py-2 rounded-lg text-sm transition-colors ${
-                                      location.pathname === subItem.path
-                                        ? "text-[#7FB706] bg-[#E9FDBF] dark:bg-[#7FB706]/20 font-medium"
-                                        : "text-gray-600 dark:text-gray-400 hover:bg-[#E9FDBF] dark:hover:bg-[#7FB706]/10 hover:text-[#7FB706]"
-                                    }`}
-                                  >
-                                    <div className="font-medium">{subItem.name}</div>
-                                    {subItem.subtitle && (
-                                      <div className="text-xs text-gray-400 dark:text-gray-500 line-clamp-1">
-                                        {subItem.subtitle}
-                                      </div>
-                                    )}
-                                  </Link>
-                                ))}
+                                {item.dropdown && item.dropdown.length > 0 ? (
+                                  item.dropdown.map((subItem) => (
+                                    <Link
+                                      key={subItem.name + subItem.path}
+                                      to={subItem.path}
+                                      onClick={() => {
+                                        setIsMobileMenuOpen(false);
+                                        setActiveMobileDropdown(null);
+                                      }}
+                                      className={`block px-3 py-2 rounded-lg text-sm transition-colors ${
+                                        location.pathname === subItem.path
+                                          ? "text-[#7FB706] bg-[#E9FDBF] dark:bg-[#7FB706]/20 font-medium"
+                                          : "text-gray-600 dark:text-gray-400 hover:bg-[#E9FDBF] dark:hover:bg-[#7FB706]/10 hover:text-[#7FB706]"
+                                      }`}
+                                    >
+                                      <div className="font-medium">{subItem.name}</div>
+                                      {subItem.subtitle && (
+                                        <div className="text-xs text-gray-400 dark:text-gray-500 line-clamp-1">
+                                          {subItem.subtitle}
+                                        </div>
+                                      )}
+                                    </Link>
+                                  ))
+                                ) : (
+                                  <div className="px-3 py-2 text-xs text-gray-400 italic">
+                                    No {item.name} models listed yet.
+                                  </div>
+                                )}
                                 {item.viewAllPath && (
                                   <Link
                                     to={item.viewAllPath}

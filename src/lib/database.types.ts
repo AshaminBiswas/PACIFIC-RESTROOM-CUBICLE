@@ -141,6 +141,8 @@ export interface Product {
   image_url: string;
   alt_text?: string | null;
   additional_images: string[];
+  videos?: string[];
+  video_urls?: string[];
   features: string[];
   specifications: { label: string; value: string }[];
   applications: string[];

@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router";
 import {
   CheckCircle2, Shield, Zap, Award, ArrowRight, Phone,
   Clock, Wrench, BadgeCheck, Truck, HeadphonesIcon, Star,
-  ChevronRight, Layers,
+  ChevronRight, Layers, Video, Film, Play, Eye,
 } from "lucide-react";
 import { Button } from "../components/Button";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
@@ -28,6 +28,36 @@ function toCategorySlug(category: string | undefined) {
     .replace(/(^-|-$)/g, "");
 }
 
+// Helper: extract and format video embed info from YouTube, Vimeo, or direct URLs
+function parseVideoSource(url: string): { type: "youtube" | "vimeo" | "native"; src: string } | null {
+  if (!url) return null;
+  const trimmed = url.trim();
+
+  // YouTube match (watch?v=, youtu.be/, embed/, shorts/)
+  const ytMatch = trimmed.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/))([\w-]{11})/i);
+  if (ytMatch && ytMatch[1]) {
+    return {
+      type: "youtube",
+      src: `https://www.youtube-nocookie.com/embed/${ytMatch[1]}?rel=0&modestbranding=1`,
+    };
+  }
+
+  // Vimeo match
+  const vimeoMatch = trimmed.match(/(?:vimeo\.com\/(?:channels\/(?:\w+\/)?|groups\/(?:[^\/]*)\/videos\/|album\/(?:\d+)\/video\/|video\/|)(\d+))/i);
+  if (vimeoMatch && vimeoMatch[1]) {
+    return {
+      type: "vimeo",
+      src: `https://player.vimeo.com/video/${vimeoMatch[1]}?title=0&byline=0&portrait=0`,
+    };
+  }
+
+  // Native HTML5 video (direct MP4/WebM/Supabase storage URL)
+  return {
+    type: "native",
+    src: trimmed,
+  };
+}
+
 export default function ProductDetailPage() {
   const { slug, productSlug, categorySlug } = useParams<{ slug: string; productSlug: string; categorySlug: string }>();
   const navigate = useNavigate();
@@ -37,7 +67,6 @@ export default function ProductDetailPage() {
   const { data: catalogs } = useCatalogs(product?.id || undefined);
   const [showCatalogViewer, setShowCatalogViewer] = useState(false);
   const [currentMain, setCurrentMain] = useState<string | null>(null);
-  const [currentThumbs, setCurrentThumbs] = useState<string[] | null>(null);
   const [activeColorIdx, setActiveColorIdx] = useState(0);
 
   // Redirect old /products/:slug URLs to /products/:categorySlug/:productSlug
@@ -50,8 +79,26 @@ export default function ProductDetailPage() {
     }
   }, [product, slug, productSlug, navigate]);
 
-  const mainImage = currentMain || product?.image_url || "";
-  const thumbnailImages = currentThumbs || product?.additional_images?.filter(Boolean).slice(0, 4) || [];
+  // Collect all photos (image_url + additional_images), without duplicates
+  const allImages = Array.from(new Set([
+    product?.image_url,
+    ...(product?.additional_images || [])
+  ])).filter(Boolean) as string[];
+
+  const mainImage = currentMain || (allImages.length > 0 ? allImages[0] : (product?.image_url || ""));
+
+  // Collect all product videos (videos or video_urls or meta videos or legacy video_url)
+  const metaVideos = (product?.specifications?.find((s: any) => s.label === '__hardware_meta')?.value as any)?.videos;
+  const productVideos: string[] = [
+    ...(Array.isArray(product?.videos) ? product.videos : []),
+    ...(Array.isArray(product?.video_urls) ? product.video_urls : []),
+    ...(Array.isArray(metaVideos) ? metaVideos : []),
+    ...(typeof (product as any)?.video_url === 'string' ? [(product as any).video_url] : [])
+  ].map(v => typeof v === 'string' ? v.trim() : '').filter(Boolean);
+  const uniqueVideos = Array.from(new Set(productVideos));
+
+  // Specifications for public rendering (filtering out internal metadata keys)
+  const displaySpecs = (product?.specifications || []).filter((s) => !s.label.startsWith('__'));
 
   // Build the canonical URL path with category
   const productUrl = product
@@ -59,15 +106,6 @@ export default function ProductDetailPage() {
       ? `/products/${toCategorySlug(product.category)}/${product.slug}`
       : `/products/${product.slug}`
     : "";
-
-  const handleSwap = (idx: number) => {
-    const clickedImg = thumbnailImages[idx];
-    if (clickedImg === mainImage) return;
-    const newThumbs = [...thumbnailImages];
-    newThumbs[idx] = mainImage;
-    setCurrentMain(clickedImg);
-    setCurrentThumbs(newThumbs);
-  };
 
   if (loading) {
     return (
@@ -191,16 +229,30 @@ export default function ProductDetailPage() {
 
             {/* Right: Image gallery */}
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.2 }}>
-              <div className="relative rounded-3xl overflow-hidden aspect-[4/3] mb-4 ring-1 ring-white/10">
-                <ImageWithFallback src={mainImage} alt={product.title} className="w-full h-full object-cover transition-all duration-500" />
+              <div className="relative rounded-3xl overflow-hidden aspect-[4/3] mb-4 ring-1 ring-white/10 shadow-2xl group">
+                <ImageWithFallback src={mainImage} alt={product.title} className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105" />
+                {allImages.length > 1 && (
+                  <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-medium text-white/90 border border-white/10 flex items-center gap-1.5 shadow-lg">
+                    <Eye className="w-3.5 h-3.5 text-[#B5F823]" />
+                    <span>{allImages.indexOf(mainImage) >= 0 ? allImages.indexOf(mainImage) + 1 : 1} / {allImages.length}</span>
+                  </div>
+                )}
               </div>
-              {thumbnailImages.length > 0 && (
-                <div className="grid grid-cols-4 gap-2.5">
-                  {thumbnailImages.map((img, idx) => {
+              {allImages.length > 1 && (
+                <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-2.5 max-h-52 overflow-y-auto p-1">
+                  {allImages.map((img, idx) => {
                     const isActive = img === mainImage;
                     return (
-                      <button key={img + idx} onClick={() => handleSwap(idx)}
-                        className={`relative rounded-xl overflow-hidden aspect-[4/3] transition-all duration-300 ${isActive ? "ring-2 ring-[#B5F823] shadow-lg shadow-[#7FB706]/20" : "opacity-40 hover:opacity-80 ring-1 ring-white/10"}`}
+                      <button
+                        key={img + idx}
+                        type="button"
+                        onClick={() => setCurrentMain(img)}
+                        className={`relative rounded-xl overflow-hidden aspect-[4/3] transition-all duration-300 ${
+                          isActive
+                            ? "ring-2 ring-[#B5F823] shadow-lg shadow-[#7FB706]/30 scale-[1.03]"
+                            : "opacity-60 hover:opacity-100 ring-1 ring-white/10 hover:ring-[#7FB706]/50"
+                        }`}
+                        title={`View photo ${idx + 1}`}
                       >
                         <ImageWithFallback src={img} alt={`${product.title} ${idx + 1}`} className="w-full h-full object-cover" />
                       </button>
@@ -260,13 +312,13 @@ export default function ProductDetailPage() {
           <div className="grid lg:grid-cols-2 gap-10 lg:gap-16">
 
             {/* Specifications */}
-            {product.specifications && product.specifications.length > 0 && (
+            {displaySpecs.length > 0 && (
               <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
                 <span className="text-xs font-bold tracking-widest text-[#7FB706] uppercase">Technical Details</span>
                 <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mt-2 mb-8">Specifications</h2>
                 <div className="rounded-2xl overflow-hidden border border-gray-200 dark:border-white/10">
-                  {product.specifications.map((spec: ProductSpecification, index: number) => (
-                    <div key={index} className={`flex justify-between items-center px-5 sm:px-6 py-4 ${index % 2 === 0 ? "bg-white dark:bg-white/[0.03]" : "bg-gray-50/70 dark:bg-white/[0.01]"} ${index < product.specifications.length - 1 ? "border-b border-gray-100 dark:border-white/5" : ""}`}>
+                  {displaySpecs.map((spec: ProductSpecification, index: number) => (
+                    <div key={index} className={`flex justify-between items-center px-5 sm:px-6 py-4 ${index % 2 === 0 ? "bg-white dark:bg-white/[0.03]" : "bg-gray-50/70 dark:bg-white/[0.01]"} ${index < displaySpecs.length - 1 ? "border-b border-gray-100 dark:border-white/5" : ""}`}>
                       <span className="font-semibold text-gray-900 dark:text-white text-sm">{spec.label}</span>
                       <span className="text-gray-500 dark:text-gray-400 text-sm text-right ml-4">{spec.value}</span>
                     </div>
@@ -319,6 +371,106 @@ export default function ProductDetailPage() {
           )}
         </div>
       </section>
+
+      {/* ═══════════════════ VIDEO SHOWCASE (MINIMUM 2 VIDEOS) ═══════════════════ */}
+      {uniqueVideos.length > 0 && (
+        <section className="py-16 sm:py-20 lg:py-24 bg-[#05041a] text-white relative overflow-hidden border-t border-b border-white/5">
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="absolute top-1/2 left-0 w-96 h-96 bg-[#7FB706]/5 rounded-full blur-[100px] -translate-y-1/2" />
+            <div className="absolute top-1/2 right-0 w-96 h-96 bg-[#B5F823]/5 rounded-full blur-[100px] -translate-y-1/2" />
+          </div>
+
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-center max-w-3xl mx-auto mb-12 sm:mb-16"
+            >
+              <span className="inline-flex items-center gap-1.5 text-xs font-bold tracking-widest text-[#B5F823] uppercase bg-[#7FB706]/10 border border-[#7FB706]/20 px-4 py-1.5 rounded-full mb-3">
+                <Video className="w-3.5 h-3.5" />
+                Live Video Demonstrations
+              </span>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mt-2">
+                Experience in Action
+              </h2>
+              <p className="text-gray-400 text-sm sm:text-base mt-3">
+                Explore architectural walkthroughs, durability benchmarks, and step-by-step modular installation guides.
+              </p>
+            </motion.div>
+
+            <div className={`grid gap-8 max-w-6xl mx-auto ${uniqueVideos.length === 1 ? 'max-w-3xl' : 'lg:grid-cols-2'}`}>
+              {uniqueVideos.map((videoUrl, idx) => {
+                const parsed = parseVideoSource(videoUrl);
+                if (!parsed) return null;
+
+                const defaultTitles = [
+                  "Architectural Walkthrough & 360° Tour",
+                  "Hardware & Step-by-Step Installation",
+                  "Durability & Stress Testing",
+                  "Feature Showcase & Design Details",
+                ];
+                const videoTitle = defaultTitles[idx] || `Demonstration Video #${idx + 1}`;
+                const videoBadge = idx === 0 ? "Video #1: Walkthrough" : idx === 1 ? "Video #2: Installation" : `Video #${idx + 1}`;
+
+                return (
+                  <motion.div
+                    key={idx}
+                    initial={{ opacity: 0, y: 24 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: idx * 0.1 }}
+                    className="bg-white/[0.03] backdrop-blur-xl rounded-3xl p-5 sm:p-6 border border-white/10 shadow-2xl flex flex-col justify-between hover:border-[#7FB706]/40 transition-all duration-300"
+                  >
+                    <div>
+                      <div className="flex items-center justify-between gap-3 mb-4">
+                        <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#B5F823] bg-[#7FB706]/20 px-3 py-1 rounded-full border border-[#7FB706]/30">
+                          <Film className="w-3.5 h-3.5" />
+                          {videoBadge}
+                        </span>
+                        <span className="text-[11px] text-gray-400 font-mono">
+                          {parsed.type === "youtube" ? "YouTube HD" : parsed.type === "vimeo" ? "Vimeo HD" : "Direct Video (MP4)"}
+                        </span>
+                      </div>
+
+                      <h3 className="text-lg sm:text-xl font-bold text-white mb-2">
+                        {videoTitle}
+                      </h3>
+                      <p className="text-xs text-gray-400 mb-4 line-clamp-2">
+                        {idx === 0
+                          ? "Comprehensive 360-degree overview covering material finishes, clearances, and headrail integration."
+                          : "Factory technician installation workflow highlighting anchor brackets, hinges, and tamper-proof indicator locks."}
+                      </p>
+                    </div>
+
+                    <div className="relative rounded-2xl overflow-hidden aspect-video bg-black/80 ring-1 ring-white/10 shadow-inner">
+                      {parsed.type === "native" ? (
+                        <video
+                          src={parsed.src}
+                          controls
+                          playsInline
+                          preload="metadata"
+                          className="w-full h-full object-contain bg-black"
+                        >
+                          Your browser does not support HTML5 video.
+                        </video>
+                      ) : (
+                        <iframe
+                          src={parsed.src}
+                          title={`${product.title} - ${videoTitle}`}
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                          allowFullScreen
+                          className="w-full h-full border-0"
+                        />
+                      )}
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* ═══════════════════ COLORS & FINISHES ═══════════════════ */}
       {product.colors && product.colors.length > 0 && (

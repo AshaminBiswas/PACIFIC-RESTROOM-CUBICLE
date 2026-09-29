@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { supabase, uploadImage } from "../../../lib/supabase";
+import { supabase, uploadImage, uploadMultipleImages, uploadVideo } from "../../../lib/supabase";
 import { useAdminProducts } from "../../../lib/hooks";
 import type { Product } from "../../../lib/database.types";
 import {
@@ -15,8 +15,16 @@ import {
   GripVertical,
   Maximize2,
   Minimize2,
+  Video,
+  Film,
+  Play,
+  Image as ImageIcon,
+  PlusCircle,
+  Check,
+  Sparkles,
 } from "lucide-react";
 import Editor from "react-simple-wysiwyg";
+import OpenAIGalleryModal from "../../components/OpenAIGalleryModal";
 
 
 // Slug helper
@@ -38,6 +46,7 @@ const emptyForm = {
   category: "",
   image_url: "",
   additional_images: [] as string[],
+  videos: ["", ""] as string[], // Minimum 2 videos
   features: [] as string[],
   specifications: [] as { label: string; value: string }[],
   applications: [] as string[],
@@ -55,6 +64,7 @@ export default function AdminProducts() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [isExpanded, setIsExpanded] = useState(false);
+  const [showAiModal, setShowAiModal] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
   // ── Feature / spec / application string helpers ──
@@ -110,7 +120,7 @@ export default function AdminProducts() {
 
   const openCreate = () => {
     setEditing(null);
-    setForm({ ...emptyForm, sort_order: products.length + 1 });
+    setForm({ ...emptyForm, videos: ["", ""], sort_order: products.length + 1 });
     setCustomCategory("");
     setShowModal(true);
     setIsExpanded(false);
@@ -120,6 +130,21 @@ export default function AdminProducts() {
   const openEdit = (product: Product) => {
     setEditing(product);
     const isCustom = product.category && !PREDEFINED_CATEGORIES.includes(product.category);
+    const hwMeta = product.specifications?.find((s: any) => s.label === '__hardware_meta');
+    const metaVideos = (hwMeta as any)?.value?.videos;
+    const rawVideos = (product.videos && product.videos.length > 0)
+      ? product.videos
+      : (product.video_urls && product.video_urls.length > 0)
+        ? product.video_urls
+        : Array.isArray(metaVideos)
+          ? metaVideos
+          : [];
+    const normalizedVideos = [
+      rawVideos[0] || "",
+      rawVideos[1] || "",
+      ...rawVideos.slice(2),
+    ];
+
     setForm({
       slug: product.slug,
       title: product.title,
@@ -128,9 +153,10 @@ export default function AdminProducts() {
       bottom_description: product.bottom_description || "",
       category: isCustom ? "Other" : product.category,
       image_url: product.image_url,
-      additional_images: product.additional_images || [],
+      additional_images: product.additional_images ? [...product.additional_images] : [],
+      videos: normalizedVideos,
       features: [...product.features],
-      specifications: product.specifications.map((s) => ({ ...s })),
+      specifications: product.specifications.filter((s) => !s.label.startsWith('__')).map((s) => ({ ...s })),
       applications: [...product.applications],
       colors: product.colors ? product.colors.map((c) => ({ ...c })) : [],
       is_featured: product.is_featured,
@@ -151,16 +177,113 @@ export default function AdminProducts() {
   };
 
   const additionalFileRef = useRef<HTMLInputElement>(null);
+  const [uploadingMultipleImages, setUploadingMultipleImages] = useState(false);
+  const [newGalleryImageUrl, setNewGalleryImageUrl] = useState("");
 
-  const handleAdditionalImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleMultipleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    setUploadingMultipleImages(true);
+    setError("");
+    try {
+      const fileList = Array.from(files);
+      const uploadedUrls = await uploadMultipleImages(fileList, "products");
+      if (uploadedUrls.length > 0) {
+        setForm((f) => ({
+          ...f,
+          additional_images: [...(f.additional_images || []), ...uploadedUrls],
+        }));
+      }
+    } catch (err: any) {
+      setError("Failed to upload images: " + err.message);
+    } finally {
+      setUploadingMultipleImages(false);
+      if (additionalFileRef.current) additionalFileRef.current.value = "";
+    }
+  };
+
+  const handleAddGalleryImageUrl = () => {
+    if (!newGalleryImageUrl.trim()) return;
+    setForm((f) => ({
+      ...f,
+      additional_images: [...(f.additional_images || []), newGalleryImageUrl.trim()],
+    }));
+    setNewGalleryImageUrl("");
+  };
+
+  const handleRemoveGalleryImage = (index: number) => {
+    setForm((f) => ({
+      ...f,
+      additional_images: (f.additional_images || []).filter((_, i) => i !== index),
+    }));
+  };
+
+  const handleSetAsMainImage = (index: number) => {
+    setForm((f) => {
+      const selected = f.additional_images[index];
+      const previousMain = f.image_url;
+      const nextAdditional = [...f.additional_images];
+      if (previousMain) {
+        nextAdditional[index] = previousMain;
+      } else {
+        nextAdditional.splice(index, 1);
+      }
+      return {
+        ...f,
+        image_url: selected,
+        additional_images: nextAdditional,
+      };
+    });
+  };
+
+  // ── Videos state & handlers (Minimum 2 Videos) ──
+  const [videoUploadingIndex, setVideoUploadingIndex] = useState<number | null>(null);
+
+  const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    if (form.additional_images.length >= 4) {
-      setError("Maximum 4 additional images allowed.");
-      return;
+    setVideoUploadingIndex(index);
+    setError("");
+    try {
+      const url = await uploadVideo(file, "videos");
+      if (url) {
+        setForm((f) => {
+          const nextVideos = [...f.videos];
+          nextVideos[index] = url;
+          return { ...f, videos: nextVideos };
+        });
+      }
+    } catch (err: any) {
+      setError("Video upload failed: " + err.message);
+    } finally {
+      setVideoUploadingIndex(null);
+      e.target.value = "";
     }
-    const url = await uploadImage(file, "products");
-    if (url) setForm((f) => ({ ...f, additional_images: [...f.additional_images, url] }));
+  };
+
+  const handleVideoUrlChange = (val: string, index: number) => {
+    setForm((f) => {
+      const nextVideos = [...f.videos];
+      nextVideos[index] = val;
+      return { ...f, videos: nextVideos };
+    });
+  };
+
+  const handleAddVideoSlot = () => {
+    setForm((f) => ({
+      ...f,
+      videos: [...f.videos, ""],
+    }));
+  };
+
+  const handleRemoveVideoSlot = (index: number) => {
+    setForm((f) => {
+      const filtered = f.videos.filter((_, i) => i !== index);
+      while (filtered.length < 2) {
+        filtered.push("");
+      }
+      return { ...f, videos: filtered };
+    });
   };
 
   const addFeature = () => {
@@ -194,7 +317,39 @@ export default function AdminProducts() {
 
     const slug = form.slug || toSlug(form.title);
     const finalCategory = form.category === "Other" && customCategory.trim() !== "" ? customCategory.trim() : form.category;
-    const payload = { ...form, slug, category: finalCategory };
+    const cleanVideos = form.videos.map((v) => v.trim()).filter(Boolean);
+
+    // Pack videos into specifications __hardware_meta to match schema
+    const cleanSpecs = form.specifications.filter((s) => !s.label.startsWith("__"));
+    const existingMeta = form.specifications.find((s) => s.label === "__hardware_meta")?.value || {};
+    const updatedSpecs = [
+      ...cleanSpecs,
+      {
+        label: "__hardware_meta",
+        value: {
+          ...existingMeta,
+          videos: cleanVideos,
+        },
+      },
+    ];
+
+    const payload = {
+      slug,
+      title: form.title,
+      subtitle: form.subtitle,
+      description: form.description,
+      bottom_description: form.bottom_description,
+      category: finalCategory,
+      image_url: form.image_url,
+      additional_images: form.additional_images || [],
+      features: form.features || [],
+      specifications: updatedSpecs,
+      applications: form.applications || [],
+      colors: form.colors || [],
+      is_featured: form.is_featured,
+      sort_order: form.sort_order,
+      published: form.published,
+    };
 
     try {
       if (editing) {
@@ -513,52 +668,270 @@ export default function AdminProducts() {
                 </div>
                 <p className="text-xs text-gray-500 mt-1 font-medium">Recommended: 800×600 px (4:3 ratio)</p>
                 {form.image_url && (
-                  <img
-                    src={form.image_url}
-                    alt="Preview"
-                    className="mt-2 h-24 rounded-lg object-cover"
-                  />
+                  <div className="relative inline-block mt-2 group">
+                    <img
+                      src={form.image_url}
+                      alt="Preview"
+                      className="h-24 rounded-lg object-cover aspect-[4/3] border border-[#7FB706]/40"
+                    />
+                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center p-1">
+                      <button
+                        type="button"
+                        onClick={() => setShowAiModal(true)}
+                        className="px-2 py-1 bg-black/90 hover:bg-[#7FB706] text-[#B5F823] hover:text-black rounded text-[10px] font-bold transition flex items-center gap-1 border border-[#7FB706]/40 shadow"
+                        title="Auto-Generate 4 Angles from this cover"
+                      >
+                        <Sparkles className="w-3 h-3" /> AI 4 Angles
+                      </button>
+                    </div>
+                  </div>
                 )}
               </div>
 
-              {/* Additional Images */}
-              <div>
-                <label className="block text-sm text-gray-300 mb-1">Additional Images (Max 4)</label>
-                <div className="flex items-center gap-3">
+              {/* Multiple Photo Gallery */}
+              <div className="p-4 bg-white/[0.02] border border-white/10 rounded-2xl space-y-3">
+                <div className="flex items-center justify-between">
+                  <label className="text-sm font-semibold text-gray-200 flex items-center gap-2">
+                    <ImageIcon className="w-4 h-4 text-[#7FB706]" />
+                    Product Photo Gallery (Multiple Photos)
+                  </label>
+                  <span className="text-xs px-2.5 py-0.5 rounded-full bg-[#7FB706]/15 text-[#7FB706] font-semibold">
+                    {form.additional_images.length} Photos in Gallery
+                  </span>
+                </div>
+                <p className="text-xs text-gray-400">
+                  Select and upload multiple photos at once. Click "Set Main" on any photo to make it the hero cover image.
+                </p>
+
+                {/* Upload Buttons & URL Input */}
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
                   <input
                     ref={additionalFileRef}
                     type="file"
+                    multiple
                     accept="image/*"
-                    onChange={handleAdditionalImageUpload}
+                    onChange={handleMultipleImageUpload}
                     className="hidden"
                   />
                   <button
                     type="button"
                     onClick={() => additionalFileRef.current?.click()}
-                    disabled={form.additional_images.length >= 4}
-                    className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-gray-300 hover:bg-white/10 text-sm disabled:opacity-50"
+                    disabled={uploadingMultipleImages}
+                    className="flex items-center justify-center gap-2 px-4 py-2.5 bg-[#7FB706]/20 hover:bg-[#7FB706]/30 text-[#7FB706] border border-[#7FB706]/40 rounded-xl text-xs font-bold transition disabled:opacity-50 shrink-0"
                   >
                     <Upload className="w-4 h-4" />
-                    Upload Additional
+                    <span>{uploadingMultipleImages ? "Uploading Photos..." : "Upload Multiple Photos"}</span>
                   </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (!form.image_url) {
+                        setError("Please enter or upload a main image first.");
+                        return;
+                      }
+                      setShowAiModal(true);
+                    }}
+                    className="flex items-center justify-center gap-1.5 px-4 py-2.5 bg-gradient-to-r from-[#7FB706]/20 to-[#B5F823]/20 hover:from-[#7FB706]/30 hover:to-[#B5F823]/30 text-[#B5F823] border border-[#7FB706]/40 rounded-xl text-xs font-bold transition shrink-0 shadow-lg shadow-[#7FB706]/10"
+                  >
+                    <Sparkles className="w-4 h-4 text-[#B5F823]" />
+                    <span>Auto-Generate 4 Angles (AI)</span>
+                  </button>
+
+                  <div className="flex-1 flex items-center gap-2">
+                    <input
+                      type="text"
+                      placeholder="Or paste direct image URL (https://...)"
+                      value={newGalleryImageUrl}
+                      onChange={(e) => setNewGalleryImageUrl(e.target.value)}
+                      onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), handleAddGalleryImageUrl())}
+                      className="flex-1 px-3.5 py-2 bg-white/5 border border-white/10 rounded-xl text-white text-xs focus:outline-none focus:border-[#7FB706]"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleAddGalleryImageUrl}
+                      className="px-3.5 py-2 bg-white/10 hover:bg-white/15 text-white text-xs font-medium rounded-xl transition shrink-0"
+                    >
+                      Add Photo
+                    </button>
+                  </div>
                 </div>
-                <p className="text-xs text-gray-500 mt-1 font-medium">Recommended: 800×600 px (4:3 ratio)</p>
+
+                {/* Photo Gallery Grid */}
                 {form.additional_images.length > 0 && (
-                  <div className="flex gap-2 mt-2 flex-wrap">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3 pt-2">
                     {form.additional_images.map((img, i) => (
-                      <div key={i} className="relative group">
-                        <img src={img} alt="" className="h-24 w-24 rounded-lg object-cover border border-white/10" />
-                        <button
-                          type="button"
-                          onClick={() => setForm(f => ({ ...f, additional_images: f.additional_images.filter((_, j) => j !== i) }))}
-                          className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
-                        >
-                          <X className="w-3 h-3" />
-                        </button>
+                      <div
+                        key={i}
+                        className="relative group rounded-xl overflow-hidden border border-white/10 bg-black/40 aspect-square flex flex-col justify-between"
+                      >
+                        <img src={img} alt={`Gallery ${i + 1}`} className="w-full h-full object-cover" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/40 opacity-0 group-hover:opacity-100 transition-opacity p-2 flex flex-col justify-between">
+                          <div className="flex justify-between items-center">
+                            <span className="text-[10px] font-bold text-white bg-black/60 px-1.5 py-0.5 rounded">
+                              #{i + 1}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveGalleryImage(i)}
+                              className="bg-red-500/80 hover:bg-red-500 text-white rounded-full p-1 transition shadow"
+                              title="Delete photo"
+                            >
+                              <X className="w-3 h-3" />
+                            </button>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => handleSetAsMainImage(i)}
+                            className="w-full py-1 text-[10px] font-bold bg-[#7FB706] hover:bg-[#91ce0a] text-black rounded transition"
+                          >
+                            Set Main
+                          </button>
+                        </div>
                       </div>
                     ))}
                   </div>
                 )}
+              </div>
+
+              {/* Product Demonstration & Walkthrough Videos (Minimum 2 Videos) */}
+              <div className="p-4 bg-white/[0.02] border border-white/10 rounded-2xl space-y-4">
+                <div className="flex items-center justify-between">
+                  <label className="text-sm font-semibold text-gray-200 flex items-center gap-2">
+                    <Video className="w-4 h-4 text-[#7FB706]" />
+                    Product Demonstration & Walkthrough Videos (Minimum 2 Videos)
+                  </label>
+                  <span className="text-xs px-2.5 py-0.5 rounded-full bg-[#7FB706]/15 text-[#7FB706] font-semibold">
+                    {form.videos.filter(v => v.trim()).length} of {form.videos.length} configured
+                  </span>
+                </div>
+                <p className="text-xs text-gray-400">
+                  Upload MP4/WebM video files directly or paste YouTube, Vimeo, or CDN video URLs. These videos link directly to the interactive video showcase on the frontend model page.
+                </p>
+
+                <div className="space-y-4">
+                  {form.videos.map((vidUrl, index) => {
+                    const isDefaultSlot = index < 2;
+                    const slotLabel = index === 0
+                      ? "Video #1: Architectural Walkthrough / 360° Showcase"
+                      : index === 1
+                        ? "Video #2: Site Installation & Hardware Testing Demo"
+                        : `Video #${index + 1}: Additional Feature Demonstration`;
+
+                    return (
+                      <div
+                        key={index}
+                        className="p-3.5 bg-black/40 border border-white/10 rounded-xl space-y-2.5"
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-bold text-gray-300 flex items-center gap-1.5">
+                            <Film className="w-3.5 h-3.5 text-[#7FB706]" />
+                            {slotLabel} {isDefaultSlot && <span className="text-[#7FB706] text-[10px] font-normal">(Recommended Slot)</span>}
+                          </span>
+                          {!isDefaultSlot && (
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveVideoSlot(index)}
+                              className="text-xs text-red-400 hover:text-red-300 flex items-center gap-1"
+                            >
+                              <Trash2 className="w-3 h-3" /> Remove
+                            </button>
+                          )}
+                        </div>
+
+                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                          <label className="flex items-center justify-center gap-2 px-3.5 py-2 bg-white/10 hover:bg-white/15 text-white rounded-xl text-xs font-medium cursor-pointer transition shrink-0">
+                            <Upload className="w-3.5 h-3.5 text-[#7FB706]" />
+                            <span>{videoUploadingIndex === index ? "Uploading Video..." : "Upload Video File"}</span>
+                            <input
+                              type="file"
+                              accept="video/mp4,video/webm,video/ogg,video/quicktime"
+                              onChange={(e) => handleVideoUpload(e, index)}
+                              disabled={videoUploadingIndex === index}
+                              className="hidden"
+                            />
+                          </label>
+
+                          <input
+                            type="text"
+                            placeholder="Or paste YouTube / Vimeo / MP4 direct URL"
+                            value={vidUrl}
+                            onChange={(e) => handleVideoUrlChange(e.target.value, index)}
+                            className="flex-1 px-3.5 py-2 bg-white/5 border border-white/10 rounded-xl text-white text-xs focus:outline-none focus:border-[#7FB706]"
+                          />
+
+                          {vidUrl && (
+                            <button
+                              type="button"
+                              onClick={() => handleVideoUrlChange("", index)}
+                              className="px-2.5 py-2 text-xs text-gray-400 hover:text-red-400 transition"
+                              title="Clear video"
+                            >
+                              <X className="w-4 h-4" />
+                            </button>
+                          )}
+                        </div>
+
+                        {/* Live Video Preview */}
+                        {vidUrl && vidUrl.trim() && (
+                          <div className="pt-1">
+                            {(() => {
+                              const trimmed = vidUrl.trim();
+                              const ytMatch = trimmed.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i);
+                              if (ytMatch && ytMatch[1]) {
+                                return (
+                                  <div className="relative aspect-video max-w-sm rounded-xl overflow-hidden bg-black border border-white/10 shadow-lg">
+                                    <iframe
+                                      src={`https://www.youtube-nocookie.com/embed/${ytMatch[1]}`}
+                                      className="w-full h-full"
+                                      title={`Video preview ${index + 1}`}
+                                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                      allowFullScreen
+                                    />
+                                  </div>
+                                );
+                              }
+                              const vimeoMatch = trimmed.match(/vimeo\.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|album\/(\d+)\/video\/|)(\d+)/i);
+                              if (vimeoMatch && (vimeoMatch[3] || vimeoMatch[2])) {
+                                const id = vimeoMatch[3] || vimeoMatch[2];
+                                return (
+                                  <div className="relative aspect-video max-w-sm rounded-xl overflow-hidden bg-black border border-white/10 shadow-lg">
+                                    <iframe
+                                      src={`https://player.vimeo.com/video/${id}`}
+                                      className="w-full h-full"
+                                      title={`Video preview ${index + 1}`}
+                                      allow="autoplay; fullscreen; picture-in-picture"
+                                      allowFullScreen
+                                    />
+                                  </div>
+                                );
+                              }
+                              return (
+                                <div className="relative aspect-video max-w-sm rounded-xl overflow-hidden bg-black border border-white/10 shadow-lg">
+                                  <video
+                                    src={trimmed}
+                                    controls
+                                    playsInline
+                                    className="w-full h-full object-contain"
+                                  />
+                                </div>
+                              );
+                            })()}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleAddVideoSlot}
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-[#7FB706] hover:bg-[#7FB706]/10 rounded-lg transition font-semibold"
+                >
+                  <PlusCircle className="w-3.5 h-3.5" />
+                  <span>+ Add Another Video Slot</span>
+                </button>
               </div>
 
               {/* Features */}
@@ -854,6 +1227,22 @@ export default function AdminProducts() {
           </div>
         </div>
       )}
+
+      {/* OpenAI Multi-Angle Gallery Studio Modal */}
+      <OpenAIGalleryModal
+        isOpen={showAiModal}
+        onClose={() => setShowAiModal(false)}
+        mainCoverUrl={form.image_url}
+        modelTitle={form.title}
+        category={form.category}
+        description={form.description}
+        onSuccess={(generatedUrls) => {
+          setForm((f) => ({
+            ...f,
+            additional_images: [...(f.additional_images || []), ...generatedUrls],
+          }));
+        }}
+      />
     </div>
   );
 }

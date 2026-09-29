@@ -87,18 +87,12 @@ export function useProducts(featuredOnly = false): UseDataResult<Product> {
       const { data: rows, error: err } = await query;
       if (err) throw err;
       const result = (rows as Product[]) || [];
-      const finalResult = (result.length > 0)
-        ? result
-        : (featuredOnly ? demoProducts.filter((p) => p.is_featured) : demoProducts);
-      setCache(cacheKey, finalResult);
-      setData(finalResult);
+      setCache(cacheKey, result);
+      setData(result);
     } catch (e: any) {
       console.error("Failed to fetch products:", e);
       setError(e.message);
-      const filtered = featuredOnly
-        ? demoProducts.filter((p) => p.is_featured)
-        : demoProducts;
-      setData(filtered);
+      setData([]);
     } finally {
       setLoading(false);
     }
@@ -137,14 +131,14 @@ export function useProduct(slug: string | undefined): UseSingleResult<Product> {
           .eq("slug", slug!)
           .single();
         if (err || !row) {
-          setData(demoProducts.find((p) => p.slug === slug) || null);
+          setData(null);
         } else {
           setData(row as Product);
         }
       } catch (e: any) {
         console.error("Failed to fetch product:", e);
         setError(e.message);
-        setData(demoProducts.find((p) => p.slug === slug) || null);
+        setData(null);
       } finally {
         setLoading(false);
       }

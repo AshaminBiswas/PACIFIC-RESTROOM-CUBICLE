@@ -17,7 +17,15 @@ export const demoProducts: Product[] = [
     category: "Restroom Cubicles",
     image_url: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80",
     additional_images: [
-      "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80"
+      "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80"
+    ],
+    videos: [
+      "https://www.youtube.com/watch?v=ScMzIvxBSi4",
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
     ],
     features: [
       "12mm / 18mm Solid Compact Phenolic Laminate",
@@ -54,7 +62,15 @@ export const demoProducts: Product[] = [
     description: "Minimalist high-headroom commercial cubicle engineered with 12mm/18mm solid compact laminate and concealed hardware junctions for a sleek, contemporary aesthetic.",
     category: "Restroom Cubicles",
     image_url: "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=800&q=80",
-    additional_images: [],
+    additional_images: [
+      "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80"
+    ],
+    videos: [
+      "https://www.youtube.com/watch?v=ScMzIvxBSi4",
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+    ],
     features: [
       "High-Headroom Architectural Visual Profile",
       "Concealed Pivot Self-Closing Hinges",
@@ -321,7 +337,15 @@ export const demoProducts: Product[] = [
     description: "Innovative Z-shaped interlocking door geometry allowing two users to hang full-length garments in the footprint of a single column.",
     category: "Lockers",
     image_url: "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=800&q=80",
-    additional_images: [],
+    additional_images: [
+      "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=800&q=80"
+    ],
+    videos: [
+      "https://www.youtube.com/watch?v=ScMzIvxBSi4",
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+    ],
     features: [
       "Interlocking Z-Shape Geometry for Full Garment Hanging",
       "Two Independent Lockable Storage Compartments per Column",
@@ -507,7 +531,15 @@ export const demoProducts: Product[] = [
     description: "Engineered for high-impact commercial restrooms. Model A incorporates an extra adjustable floor-supporting leg to anchor the outer bottom edge, eliminating cantilever wall stress.",
     category: "Urinal Partitions",
     image_url: "https://images.unsplash.com/photo-1584622781564-1d987f7333c1?auto=format&fit=crop&w=800&q=80",
-    additional_images: [],
+    additional_images: [
+      "https://images.unsplash.com/photo-1584622781564-1d987f7333c1?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80"
+    ],
+    videos: [
+      "https://www.youtube.com/watch?v=ScMzIvxBSi4",
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+    ],
     features: [
       "Extra Adjustable Floor Supporting Leg (100–150mm)",
       "Grade 304 Stainless Steel Corner L-Clamps (3 pcs)",
@@ -642,7 +674,15 @@ export const demoProducts: Product[] = [
     description: "Engineered solid compact phenolic laminate cubicle partition designed specially for primary schools, kindergartens, and child care centers. Features low door height for supervisory vision, anti-finger trap rounded edges, and soft self-closing spring hinges.",
     category: "Kids Toilet",
     image_url: "https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&w=800&q=80",
-    additional_images: [],
+    additional_images: [
+      "https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=800&q=80"
+    ],
+    videos: [
+      "https://www.youtube.com/watch?v=ScMzIvxBSi4",
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+    ],
     features: [
       "Low Door Height (1200–1500mm) for Teacher Supervision",
       "Anti-Finger Trap Rounded Edges with Safety Gap Clearance",
