@@ -826,7 +826,7 @@ function StatsSection() {
     { label: "Projects completed", value: 600, suffix: "+", icon: CheckCircle2 },
     { label: "Happy Clients", value: 100, suffix: "+", icon: Users },
     { label: "Offices", value: 4, suffix: " Across India", icon: Building2 },
-    { label: "Warranty", value: 5, suffix: "-Year Warranty", icon: Shield },
+    { label: "Warranty", value: 10, suffix: "-Year Board Warranty", icon: Shield },
   ];
 
   return (
@@ -1057,7 +1057,7 @@ export default function HomePage() {
                   "ISO certified manufacturing processes",
                   "Custom design and engineering capabilities",
                   "Pan-India installation network",
-                  "5-year product warranty",
+                  "10-year board & 1-year hardware warranty",
                   "Dedicated after-sales support",
                 ].map((point, index) => (
                   <motion.div

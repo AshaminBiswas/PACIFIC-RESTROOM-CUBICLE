@@ -11,7 +11,12 @@ const DEFAULT_BG = "https://images.unsplash.com/photo-1486325212027-8081e485255e
 
 function toCategorySlug(category: string | undefined) {
   if (!category) return "";
-  return category.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+  const cat = category.toLowerCase().trim();
+  if (cat.includes("cubicle") && !cat.includes("kid")) return "restroom-cubicles";
+  if (cat.includes("locker")) return "lockers";
+  if (cat.includes("urinal") || cat.includes("partition")) return "urinal-partitions";
+  if (cat.includes("kid")) return "kids-toilet";
+  return cat.replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 }
 
 export default function ProductsPage() {

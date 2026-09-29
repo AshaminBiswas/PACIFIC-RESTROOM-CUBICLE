@@ -4,6 +4,7 @@ import {
   CheckCircle2, Shield, Zap, Award, ArrowRight, Phone,
   Clock, Wrench, BadgeCheck, Truck, HeadphonesIcon, Star,
   ChevronRight, Layers, Video, Film, Play, Eye,
+  Palette, Sparkles, Check,
 } from "lucide-react";
 import { Button } from "../components/Button";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
@@ -19,13 +20,38 @@ interface ProductSpecification {
   value: string;
 }
 
-// Helper: convert a category name to URL slug
+const COLOR_SWATCHES: Record<string, { bg: string; border: string; text: string; label: string; dot: string }> = {
+  golden: {
+    bg: 'bg-amber-500/10 dark:bg-amber-500/20 text-amber-800 dark:text-amber-200',
+    border: 'border-amber-500/30',
+    text: 'text-amber-600 dark:text-amber-400',
+    label: 'Golden PVD Finish',
+    dot: 'bg-gradient-to-r from-amber-400 to-yellow-500 shadow-sm shadow-amber-500/50',
+  },
+  Black: {
+    bg: 'bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200',
+    border: 'border-neutral-300 dark:border-neutral-700',
+    text: 'text-neutral-900 dark:text-neutral-100',
+    label: 'Matte Black Finish',
+    dot: 'bg-neutral-900 dark:bg-neutral-700 border border-neutral-500 shadow-sm',
+  },
+  'stainless steel': {
+    bg: 'bg-slate-100 dark:bg-slate-500/15 text-slate-800 dark:text-slate-200',
+    border: 'border-slate-300 dark:border-slate-400/30',
+    text: 'text-slate-700 dark:text-slate-300',
+    label: 'Satin Stainless Steel',
+    dot: 'bg-gradient-to-r from-slate-300 to-zinc-400 shadow-sm',
+  },
+};
+
 function toCategorySlug(category: string | undefined) {
   if (!category) return "";
-  return category
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
+  const cat = category.toLowerCase().trim();
+  if (cat.includes("cubicle") && !cat.includes("kid")) return "restroom-cubicles";
+  if (cat.includes("locker")) return "lockers";
+  if (cat.includes("urinal") || cat.includes("partition")) return "urinal-partitions";
+  if (cat.includes("kid")) return "kids-toilet";
+  return cat.replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 }
 
 // Helper: extract and format video embed info from YouTube, Vimeo, or direct URLs
@@ -99,6 +125,50 @@ export default function ProductDetailPage() {
 
   // Specifications for public rendering (filtering out internal metadata keys)
   const displaySpecs = (product?.specifications || []).filter((s) => !s.label.startsWith('__'));
+
+  // Extract hardware metadata packed inside specifications JSON
+  const hardwareMeta = (product?.specifications?.find((s: any) => s.label === '__hardware_meta')?.value as any);
+  
+  // Hardware options (SS Hardware, Nylon Hardware, colors)
+  const rawHardwareOptions: Array<{ material: string; enabled: boolean; colors?: string[] }> = 
+    Array.isArray(hardwareMeta?.hardwareOptions) ? hardwareMeta.hardwareOptions : [];
+  
+  // Hardware list (Itemized BOM)
+  const rawHardwareList: Array<{ id?: string; name: string; notes?: string; material?: string; isExtraLeg?: boolean }> =
+    Array.isArray(hardwareMeta?.hardwareList) ? hardwareMeta.hardwareList : [];
+
+  const isCubicle = (product?.category || '').toLowerCase().includes('cubicle') && !(product?.category || '').toLowerCase().includes('kid');
+  const isLocker = (product?.category || '').toLowerCase().includes('locker');
+  const isUrinal = (product?.category || '').toLowerCase().includes('urinal') || (product?.category || '').toLowerCase().includes('partition');
+  const isKids = (product?.category || '').toLowerCase().includes('kid');
+
+  const defaultHardwareList = isCubicle || isKids
+    ? [
+        { id: "1", name: "Gravity Hinges (Self-Closing Pair)", notes: "Grade 304 SS / Concealed Heavy-Duty", material: "Both" },
+        { id: "2", name: "Occupancy Indicator Lock with Emergency Release", notes: "Red/Green Vacant/Engaged Indicator Turn", material: "Both" },
+        { id: "3", name: "Ergonomic Door Pull Handle / Knob", notes: "Dual-sided ergonomic architectural grip", material: "Both" },
+        { id: "4", name: "Coat Hook with Integrated Rubber Buffer Stop", notes: "Internal door stop & apparel holder", material: "Both" },
+        { id: "5", name: "Adjustable Supporting Legs (100–150mm)", notes: "Precision height leveler for wet floor clearance", material: "Both" },
+      ]
+    : isLocker
+    ? [
+        { id: "1", name: "Concealed Heavy-Duty Pivot Hinges", notes: "Rust-proof tamper-resistant internal hinge", material: "SS Hardware" },
+        { id: "2", name: "Die-Cast Cam Lock with Master Key Override", notes: "Zinc alloy cylinder with dual numbered keys", material: "SS Hardware" },
+        { id: "3", name: "Ventilation Louver Grilles", notes: "Engineered airflow slot inserts for fresh circulation", material: "Nylon Hardware" },
+        { id: "4", name: "Acrylic Number Plates with Laser Infill", notes: "Sequential locker identification plates", material: "Standard OEM" },
+        { id: "5", name: "Base Plinth Leveler Studs", notes: "Heavy-duty floor load distribution levelers", material: "Standard OEM" },
+      ]
+    : [
+        { id: "1", name: "Heavy-Duty Stainless Steel Corner Brackets", notes: "Grade 304 U-channel & wall anchoring clamps", material: "SS Hardware" },
+        { id: "2", name: "Expansion Anchors & Hex Fasteners", notes: "Concealed masonry fixing hardware", material: "SS Hardware" },
+        ...(Boolean(hardwareMeta?.hasExtraLeg) ? [{ id: "3", name: "Adjustable Floor Supporting Leg (100–150mm)", notes: "Floor shoe bracket preventing cantilever wall strain", material: "SS Hardware", isExtraLeg: true }] : []),
+      ];
+
+  const hardwareList = rawHardwareList.length > 0 ? rawHardwareList : defaultHardwareList;
+
+  const ssOption = rawHardwareOptions.find(o => o.material === 'SS Hardware') || (isCubicle || isKids ? { material: 'SS Hardware', enabled: true, colors: ['golden', 'Black', 'stainless steel'] } : null);
+  const nylonOption = rawHardwareOptions.find(o => o.material === 'Nylon Hardware') || (isCubicle || isKids ? { material: 'Nylon Hardware', enabled: true, colors: [] } : null);
+  const hasExtraLeg = Boolean(hardwareMeta?.hasExtraLeg);
 
   // Build the canonical URL path with category
   const productUrl = product
@@ -196,21 +266,30 @@ export default function ProductDetailPage() {
               <div className="flex flex-wrap gap-6 mb-8 pb-8 border-b border-white/10">
                 {[
                   { val: "12+", lbl: "Years Experience" },
-                  { val: "5 Yr", lbl: "Warranty" },
-                  { val: "ISO", lbl: "Certified" },
+                  { val: "10 Yr", lbl: "Board Warranty" },
+                  { val: "1 Yr", lbl: "Hardware Warranty" },
+                  { val: isCubicle || isKids ? "SS 304" : isLocker ? "Heavy-Duty" : "SS Clamps", lbl: "Hardware Grade" },
+                  { val: "100%", lbl: "Waterproof" },
                 ].map((s, i) => (
-                  <div key={i} className="text-center">
+                  <div key={i} className="text-center sm:text-left">
                     <div className="text-2xl font-black text-[#B5F823]">{s.val}</div>
-                    <div className="text-xs text-gray-500 mt-0.5">{s.lbl}</div>
+                    <div className="text-xs text-gray-400 mt-0.5">{s.lbl}</div>
                   </div>
                 ))}
               </div>
 
-              <div className="flex flex-wrap gap-3">
+              <div className="flex flex-wrap items-center gap-3">
                 <Button size="lg" onClick={() => navigate("/contact")}>
                   <Phone className="w-4 h-4 mr-2" />
                   Request Quote
                 </Button>
+                <a
+                  href="#hardware-specs"
+                  className="inline-flex items-center justify-center px-5 py-2.5 rounded-full text-sm font-semibold border border-white/20 text-white hover:bg-white/10 hover:border-[#7FB706] transition-all"
+                >
+                  <Wrench className="w-4 h-4 mr-2 text-[#B5F823]" />
+                  Hardware Specs
+                </a>
                 {catalogs.length > 0 && (
                   <Button size="lg" variant="outline" onClick={() => {
                     const link = document.createElement('a');
@@ -275,12 +354,9 @@ export default function ProductDetailPage() {
             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-12 sm:mb-16">
               <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
                 <div>
-                  <span className="text-xs font-bold tracking-widest text-[#7FB706] uppercase">Advantages</span>
-                  <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mt-2">Why This Service</h2>
+                  <span className="text-xs font-bold tracking-widest text-[#7FB706] uppercase">Key Features</span>
+                  <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mt-2">Why This Model</h2>
                 </div>
-                <p className="text-gray-500 dark:text-gray-400 max-w-md text-sm lg:text-right">
-                  Every feature is designed to deliver maximum value for your projects.
-                </p>
               </div>
             </motion.div>
 
@@ -336,7 +412,7 @@ export default function ProductDetailPage() {
                   { icon: Shield, title: "Quality Assured", desc: "Rigorous testing with ISO-certified processes" },
                   { icon: Zap, title: "Fast Delivery", desc: "Industry-leading turnaround times" },
                   { icon: Award, title: "Expert Support", desc: "Dedicated project managers end-to-end" },
-                  { icon: HeadphonesIcon, title: "After-Sales Care", desc: "5-year warranty with responsive support" },
+                  { icon: HeadphonesIcon, title: "After-Sales Care", desc: "1-yr hardware & 10-yr board warranty with responsive support" },
                   { icon: Star, title: "Custom Solutions", desc: "Tailored to your exact requirements" },
                 ].map((item, i) => (
                   <motion.div key={i} initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}
@@ -356,7 +432,7 @@ export default function ProductDetailPage() {
           </div>
 
           {/* Additional Description - Full Width */}
-          {product.bottom_description && (
+          {product.bottom_description && !product.bottom_description.toLowerCase().includes("product line:") && (
             <motion.div 
               initial={{ opacity: 0, y: 20 }} 
               whileInView={{ opacity: 1, y: 0 }} 
@@ -369,6 +445,222 @@ export default function ProductDetailPage() {
               />
             </motion.div>
           )}
+        </div>
+      </section>
+
+      {/* ═══════════════════ HARDWARE DETAILS & BILL OF MATERIALS (BOM) ═══════════════════ */}
+      <section id="hardware-specs" className="py-16 sm:py-20 lg:py-24 bg-white dark:bg-[#030213] text-gray-900 dark:text-white transition-colors border-t border-gray-100 dark:border-white/5 scroll-mt-24">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center max-w-3xl mx-auto mb-12 sm:mb-16"
+          >
+            <span className="inline-flex items-center gap-1.5 text-xs font-bold tracking-widest text-[#7FB706] uppercase bg-[#7FB706]/10 border border-[#7FB706]/20 px-4 py-1.5 rounded-full mb-3">
+              <Wrench className="w-3.5 h-3.5" />
+              Engineered Hardware &amp; Accessories
+            </span>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mt-2">
+              Hardware Details &amp; Specifications
+            </h2>
+            <p className="text-gray-500 dark:text-gray-400 text-sm sm:text-base mt-3">
+              Precision-crafted architectural grade fittings engineered for high-traffic public washrooms, heavy usage, and 100% moisture resistance.
+            </p>
+          </motion.div>
+
+          <div className="grid lg:grid-cols-12 gap-8 lg:gap-10 max-w-6xl mx-auto">
+            {/* Left Column: Material Options & Available Finishes (5 Cols) */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="lg:col-span-5 space-y-6"
+            >
+              {/* Category Rules & Finishes */}
+              {isCubicle || isKids ? (
+                <div className="bg-gray-50 dark:bg-white/[0.02] border border-gray-200 dark:border-white/10 rounded-3xl p-6 space-y-6">
+                  <div>
+                    <h3 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                      <Palette className="w-5 h-5 text-[#7FB706]" />
+                      Hardware Finishes &amp; Options
+                    </h3>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                      Choose between Grade 304 Stainless Steel or High-Density Polyamide Nylon.
+                    </p>
+                  </div>
+
+                  {/* SS Hardware */}
+                  {ssOption?.enabled && (
+                    <div className="bg-white dark:bg-black/40 border border-gray-200 dark:border-white/5 rounded-2xl p-5 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <CheckCircle2 className="w-4 h-4 text-[#7FB706]" />
+                          <h4 className="text-sm font-bold text-gray-900 dark:text-white">Stainless Steel Hardware</h4>
+                        </div>
+                        <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-[#7FB706]/10 text-[#7FB706] font-semibold border border-[#7FB706]/20">
+                          Grade 304 / 316
+                        </span>
+                      </div>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
+                        Anti-vandalism, rust-proof commercial grade stainless steel with high tensile strength.
+                      </p>
+
+                      {/* Color Swatches */}
+                      {ssOption.colors && ssOption.colors.length > 0 && (
+                        <div className="pt-2 border-t border-gray-100 dark:border-white/5 space-y-2">
+                          <span className="text-[11px] font-bold tracking-wider uppercase text-gray-400 dark:text-gray-500">
+                            Available Color Finishes
+                          </span>
+                          <div className="flex flex-col gap-2">
+                            {ssOption.colors.map((color) => {
+                              const swatch = COLOR_SWATCHES[color] || {
+                                bg: 'bg-gray-100 dark:bg-white/5 text-gray-700 dark:text-gray-300',
+                                border: 'border-gray-200 dark:border-white/10',
+                                text: 'text-gray-700 dark:text-gray-300',
+                                label: color,
+                                dot: 'bg-gray-400',
+                              };
+                              return (
+                                <div
+                                  key={color}
+                                  className={`flex items-center justify-between px-3 py-2 rounded-xl border text-xs font-semibold ${swatch.bg} ${swatch.border}`}
+                                >
+                                  <div className="flex items-center gap-2">
+                                    <span className={`w-3 h-3 rounded-full shrink-0 ${swatch.dot}`} />
+                                    <span>{swatch.label}</span>
+                                  </div>
+                                  <Check className="w-3.5 h-3.5 opacity-80" />
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Nylon Hardware */}
+                  {nylonOption?.enabled && (
+                    <div className="bg-white dark:bg-black/40 border border-gray-200 dark:border-white/5 rounded-2xl p-5 flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-9 h-9 rounded-xl bg-cyan-500/10 flex items-center justify-center text-cyan-500 shrink-0">
+                          <Shield className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <div className="text-sm font-bold text-gray-900 dark:text-white">Polyamide Nylon Hardware</div>
+                          <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Non-corrosive, chemical &amp; rust-proof fittings</div>
+                        </div>
+                      </div>
+                      <span className="text-[11px] px-2.5 py-1 rounded-xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-300 border border-cyan-500/20 font-semibold">
+                        Included
+                      </span>
+                    </div>
+                  )}
+                </div>
+              ) : isLocker ? (
+                <div className="bg-indigo-500/10 border border-indigo-500/20 rounded-3xl p-6 space-y-3">
+                  <div className="flex items-center gap-2 text-indigo-400 font-bold text-sm">
+                    <Shield className="w-5 h-5" />
+                    Uniform Standard Heavy-Duty Locker Hardware
+                  </div>
+                  <p className="text-xs text-gray-700 dark:text-gray-300 leading-relaxed">
+                    All Pacific locker models use standardized uniform hardware including heavy-duty concealed hinges, cam locks with master key overrides, ventilation louver grilles, number plates, and base plinth levelers.
+                  </p>
+                </div>
+              ) : (
+                <div className="bg-amber-500/10 border border-amber-500/30 rounded-3xl p-6 space-y-3">
+                  <div className="flex items-center gap-2 text-amber-500 dark:text-amber-300 font-bold text-sm">
+                    <Sparkles className="w-5 h-5 text-amber-500" />
+                    {hasExtraLeg ? "Model A Exclusive: Floor Supporting Leg Included" : "Standard Cantilever Mount"}
+                  </div>
+                  <p className="text-xs text-gray-700 dark:text-gray-300 leading-relaxed">
+                    {hasExtraLeg
+                      ? "This model incorporates an extra adjustable floor supporting leg (100–150mm) to anchor the outer bottom edge to the floor slab, effectively preventing wall cantilever strain."
+                      : "Standard floating wall-hung cantilever mounting configuration with heavy stainless steel corner brackets."}
+                  </p>
+                </div>
+              )}
+
+              {/* Hardware & Board Quality Guarantee Badge */}
+              <div className="bg-gradient-to-br from-emerald-500/10 to-teal-500/5 border border-emerald-500/20 rounded-3xl p-5 flex items-start gap-4">
+                <div className="w-10 h-10 rounded-2xl bg-emerald-500/20 flex items-center justify-center text-emerald-500 shrink-0 mt-0.5">
+                  <BadgeCheck className="w-6 h-6" />
+                </div>
+                <div>
+                  <h4 className="text-sm font-bold text-gray-900 dark:text-white">1-Year Hardware & 10-Year Cubicle Board Warranty</h4>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed">
+                    1-Year direct replacement warranty on all Grade 304/316 SS and Polyamide nylon hardware fittings, alongside a 10-Year comprehensive warranty on solid compact phenolic laminate board against delamination, moisture damage, and swelling.
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Right Column: Itemized Hardware Bill of Materials (BOM) Table (7 Cols) */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="lg:col-span-7 bg-gray-50 dark:bg-white/[0.02] border border-gray-200 dark:border-white/10 rounded-3xl p-6 space-y-5 flex flex-col justify-between"
+            >
+              <div>
+                <div className="flex items-center justify-between border-b border-gray-200 dark:border-white/10 pb-4 mb-4">
+                  <div>
+                    <h3 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                      <Layers className="w-5 h-5 text-[#7FB706]" />
+                      Itemized Hardware Bill of Materials (BOM)
+                    </h3>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                      Standard components supplied with each cubicle / unit
+                    </p>
+                  </div>
+                  <span className="text-xs font-mono font-bold text-[#7FB706] bg-[#7FB706]/10 px-3 py-1 rounded-xl border border-[#7FB706]/20">
+                    {hardwareList.length} Items
+                  </span>
+                </div>
+
+                <div className="border border-gray-200 dark:border-white/10 rounded-2xl overflow-hidden bg-white dark:bg-black/30">
+                  <table className="w-full text-left text-xs">
+                    <thead>
+                      <tr className="border-b border-gray-200 dark:border-white/10 bg-gray-100/70 dark:bg-white/[0.03] text-gray-600 dark:text-gray-400 font-semibold">
+                        <th className="px-4 py-3 w-12 text-center">#</th>
+                        <th className="px-4 py-3">Component Name</th>
+                        <th className="px-4 py-3">Specifications / Material</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100 dark:divide-white/5">
+                      {hardwareList.map((hw, idx) => (
+                        <tr key={hw.id || idx} className="hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-colors">
+                          <td className="px-4 py-3.5 font-mono text-center text-gray-400 dark:text-gray-500">
+                            {idx + 1}
+                          </td>
+                          <td className="px-4 py-3.5 font-semibold text-gray-900 dark:text-white">
+                            <div className="flex items-center gap-2">
+                              <span>{hw.name}</span>
+                              {hw.isExtraLeg && (
+                                <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-600 dark:text-amber-300 font-bold border border-amber-400/30">
+                                  Extra Leg
+                                </span>
+                              )}
+                            </div>
+                          </td>
+                          <td className="px-4 py-3.5 text-gray-500 dark:text-gray-400 text-[11px] leading-relaxed">
+                            {hw.notes || (hw.material ? `${hw.material} Grade Fitting` : 'Standard OEM Specification')}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {/* Hardware footnote */}
+              <div className="p-3.5 bg-white dark:bg-black/40 border border-gray-100 dark:border-white/5 rounded-2xl flex items-center justify-between text-[11px] text-gray-500 dark:text-gray-400">
+                <span>Fasteners, masonry wall plugs &amp; rubber door stops included.</span>
+                <span className="font-semibold text-[#7FB706]">Pan-India Supply</span>
+              </div>
+            </motion.div>
+          </div>
         </div>
       </section>
 

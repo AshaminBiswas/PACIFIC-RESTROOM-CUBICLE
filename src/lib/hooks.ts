@@ -15,7 +15,7 @@ import {
 // Stores already-fetched data so navigating back to a page is instant.
 // Cache is busted only when `refetch()` is explicitly called.
 const memCache = new Map<string, { data: unknown; timestamp: number }>();
-const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
+const CACHE_TTL_MS = 20 * 1000; // 20 seconds for responsive CMS updates
 
 function getCached<T>(key: string): T[] | null {
   const entry = memCache.get(key);

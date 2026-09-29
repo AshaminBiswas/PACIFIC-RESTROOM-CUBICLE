@@ -3,7 +3,7 @@ import { Link } from "react-router";
 import { Facebook, Youtube, Linkedin, Instagram, Mail, Phone, MapPin, Clock } from "lucide-react";
 import { useProducts, useSolutions } from "../../lib/hooks";
 // @ts-ignore
-import logo from "../../image/logo/logo.webp";
+import logo from "../../../public/logo.png";
 
 export function Footer() {
   const [showUpdate, setShowUpdate] = useState(false);
@@ -60,10 +60,11 @@ export function Footer() {
                 <img
                   src={logo}
                   alt="Pacific Products & Solutions"
-                  className="h-16 w-auto object-contain rounded-full bg-white/5 p-1"
+                  className="h-12 sm:h-16 w-auto object-contain rounded-full"
                 />
-                <span className="text-lg font-bold text-[#7FB706] tracking-tight leading-tight">
-                  Pacific Products<br />& Solutions
+                <span className="text-base sm:text-lg font-bold tracking-tight leading-tight text-[#7FB706]">
+                  Pacific Restroom<br className="hidden sm:block" />
+                  <span className="sm:hidden"> </span>Cubicle
                 </span>
               </Link>
             </div>
