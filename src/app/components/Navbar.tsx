@@ -109,8 +109,6 @@ export function Navbar() {
   };
 
   const navItems: NavItem[] = [
-    { name: "Home", path: "/" },
-    { name: "About", path: "/about" },
     {
       name: "Cubicles",
       categorySlug: "restroom-cubicles",
@@ -223,7 +221,7 @@ export function Navbar() {
           {/* Desktop Menu */}
           <div
             ref={navContainerRef}
-            className="hidden lg:flex items-center space-x-3 xl:space-x-5"
+            className="hidden lg:flex items-center space-x-4 xl:space-x-7"
           >
             {navItems.map((item) => {
               const active = isItemActive(item);

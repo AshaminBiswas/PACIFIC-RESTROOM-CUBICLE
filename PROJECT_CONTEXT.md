@@ -277,12 +277,11 @@ npm test
   - **Direct Model Detail Routing**: Clicking any model item instantly routes to `/products/:categorySlug/:productSlug` (e.g. `/products/restroom-cubicles/cubicle-delight`), rendering full specifications, color selectors, and technical details.
   - **Mobile Accordion Support**: On mobile viewports, each category renders as an accordion with item counts and smooth height animations, routing to individual model details on tap.
 - **Menu Hierarchy**:
-  - `Home` (`/`)
-  - `About` (`/about`)
-  - `Cubicles` (Dropdown)
-  - `Lockers` (Dropdown)
-  - `Urinal Partitions` (Dropdown)
-  - `Kids Toilet` (Dropdown)
+  - `Brand Logo` (Routes to Home `/`)
+  - `Cubicles` (Dropdown of all cubicle models)
+  - `Lockers` (Dropdown of all locker models)
+  - `Urinal Partitions` (Dropdown of all partition models)
+  - `Kids Toilet` (Dropdown of all kids models)
   - `Get Quote` CTA (`/contact`) & Theme Switcher.
 
 
