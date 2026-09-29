@@ -21,7 +21,16 @@ export default function ProductsPage() {
   const categoryFilter = searchParams.get("category");
 
   const filteredProducts = categoryFilter
-    ? products.filter(p => p.category === categoryFilter)
+    ? products.filter((p) => {
+        const cf = categoryFilter.toLowerCase().trim();
+        const pc = (p.category || "").toLowerCase().trim();
+        if (pc === cf) return true;
+        if (cf.includes("cubicle") && pc.includes("cubicle") && !pc.includes("kid")) return true;
+        if (cf.includes("locker") && pc.includes("locker")) return true;
+        if ((cf.includes("urinal") || cf.includes("partition")) && (pc.includes("urinal") || pc.includes("partition"))) return true;
+        if (cf.includes("kid") && pc.includes("kid")) return true;
+        return false;
+      })
     : products;
 
   return (

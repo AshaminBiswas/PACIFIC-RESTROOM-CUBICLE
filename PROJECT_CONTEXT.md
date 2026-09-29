@@ -263,13 +263,26 @@ npm test
 
 ---
 
-## 8. Navbar Restructuring: Streamlined Navigation
+## 8. Navbar Architecture: 4-Category Dynamic Model Dropdowns
 
-- **Navigation Simplification**: Replaced the legacy four separate navigation items (`Solutions` -> `/solutions`, `Gallery` -> `/gallery`, `Contact` -> `/contact`, `Services` -> `/products`) with a consolidated core category navigation item:
-  - **"Cubicles, Lockers, Urinal Partitions"** directly linking to `/admin/dashboard/products`.
+- **Category Separation**: Separated the single static category link into 4 distinct, interactive product category dropdown menus:
+  1. **Cubicles**: Dropdown displaying all adult cubicle models (Delight, Skylight, Platina, Gusto, SkyWings, Wall Hung, Saffron, Splendor, Platina Wave, Classic HPL, AeroFit Nylon) with direct links to `/products/restroom-cubicles/:slug` and "Explore All Cubicle Models" link.
+  2. **Lockers**: Dropdown displaying all compact laminate locker models (Tier 1, Tier 2, Tier 3, Tier 4, Tier 5, Tier 6, Z-Shape) with direct links to `/products/lockers/:slug` and "Explore All Locker Models" link.
+  3. **Urinal Partitions**: Dropdown displaying all urinal partition models (Model A Floor-Leg, Model B Wall-Hung, Model C Full Channel, Model D Extended Privacy, Urinal Modesty Screen) with direct links to `/products/urinal-partitions/:slug` and "Explore All Urinal Partitions" link.
+  4. **Kids Toilet**: Dropdown displaying all children's restroom models (Summer Fun, Azalea, Miniarc, Arcadia) with direct links to `/products/kids-toilet/:slug` and "Explore All Kids Toilet Models" link.
+- **Interaction Paradigms**:
+  - **Click-to-Toggle & Hover Support**: Clicking on any category toggles its dropdown list open or closed; hovering also opens the panel for swift browsing.
+  - **Click-Outside Listener**: Closes open dropdowns when clicking outside the menu area.
+  - **Dynamic Supabase + Seeded Fallback**: Uses `useProducts()` to dynamically reflect new models added in the database while seamlessly falling back to comprehensive seeded catalog models in `demo-data.ts`.
+  - **Direct Model Detail Routing**: Clicking any model item instantly routes to `/products/:categorySlug/:productSlug` (e.g. `/products/restroom-cubicles/cubicle-delight`), rendering full specifications, color selectors, and technical details.
+  - **Mobile Accordion Support**: On mobile viewports, each category renders as an accordion with item counts and smooth height animations, routing to individual model details on tap.
 - **Menu Hierarchy**:
   - `Home` (`/`)
   - `About` (`/about`)
-  - `Cubicles, Lockers, Urinal Partitions` (`/admin/dashboard/products`)
-  - `Get Quote` CTA (`/contact`) & Theme Switcher preserved across desktop and mobile menus.
+  - `Cubicles` (Dropdown)
+  - `Lockers` (Dropdown)
+  - `Urinal Partitions` (Dropdown)
+  - `Kids Toilet` (Dropdown)
+  - `Get Quote` CTA (`/contact`) & Theme Switcher.
+
 
