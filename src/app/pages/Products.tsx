@@ -48,7 +48,7 @@ const CATEGORY_DEFINITIONS: Record<string, CategoryMeta> = {
   },
   "kids-toilet": {
     key: "kids-toilet",
-    name: "Kids Toilet",
+    name: "Kids Cubicle",
     slug: "kids-toilet",
     title: "Kids & Preschool Safety Cubicles",
     subtitle: "Specially designed compact cubicles featuring anti-finger pinch safety clearances, rounded corners, and emergency exterior coin release.",

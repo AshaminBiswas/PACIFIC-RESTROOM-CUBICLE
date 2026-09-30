@@ -800,16 +800,16 @@ function CategoryBentoGrid({ navigate }: { navigate: (path: string) => void }) {
           </p>
         </div>
 
-        {/* Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {/* Card 1: Restroom Cubicles (Span 2 cols on lg) */}
+        {/* Bento Grid — 1 Card per row */}
+        <div className="grid grid-cols-1 gap-6">
+          {/* Card 1: Restroom Cubicles */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             whileHover={{ y: -4 }}
             onClick={() => navigate("/products/restroom-cubicles")}
-            className="md:col-span-2 lg:col-span-2 group relative rounded-3xl overflow-hidden bg-[#0a0a1a] border border-gray-200 dark:border-white/10 hover:border-[#7FB706]/50 shadow-xl cursor-pointer min-h-[380px] flex flex-col justify-end p-6 sm:p-8"
+            className="w-full group relative rounded-3xl overflow-hidden bg-[#0a0a1a] border border-gray-200 dark:border-white/10 hover:border-[#7FB706]/50 shadow-xl cursor-pointer min-h-[360px] flex flex-col justify-end p-6 sm:p-8"
           >
             <div className="absolute inset-0 z-0">
               <ImageWithFallback
@@ -845,7 +845,7 @@ function CategoryBentoGrid({ navigate }: { navigate: (path: string) => void }) {
             </div>
           </motion.div>
 
-          {/* Card 2: Modular Lockers (Span 2 cols on lg) */}
+          {/* Card 2: Modular Lockers */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -853,7 +853,7 @@ function CategoryBentoGrid({ navigate }: { navigate: (path: string) => void }) {
             transition={{ delay: 0.1 }}
             whileHover={{ y: -4 }}
             onClick={() => navigate("/products/lockers")}
-            className="md:col-span-2 lg:col-span-2 group relative rounded-3xl overflow-hidden bg-[#0a0a1a] border border-gray-200 dark:border-white/10 hover:border-[#7FB706]/50 shadow-xl cursor-pointer min-h-[380px] flex flex-col justify-end p-6 sm:p-8"
+            className="w-full group relative rounded-3xl overflow-hidden bg-[#0a0a1a] border border-gray-200 dark:border-white/10 hover:border-[#7FB706]/50 shadow-xl cursor-pointer min-h-[360px] flex flex-col justify-end p-6 sm:p-8"
           >
             <div className="absolute inset-0 z-0">
               <ImageWithFallback
@@ -889,7 +889,7 @@ function CategoryBentoGrid({ navigate }: { navigate: (path: string) => void }) {
             </div>
           </motion.div>
 
-          {/* Card 3: Urinal Partitions (Span 2 cols on lg) */}
+          {/* Card 3: Urinal Partitions */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -897,7 +897,7 @@ function CategoryBentoGrid({ navigate }: { navigate: (path: string) => void }) {
             transition={{ delay: 0.2 }}
             whileHover={{ y: -4 }}
             onClick={() => navigate("/products/urinal-partitions")}
-            className="md:col-span-1 lg:col-span-2 group relative rounded-3xl overflow-hidden bg-[#0a0a1a] border border-gray-200 dark:border-white/10 hover:border-[#7FB706]/50 shadow-xl cursor-pointer min-h-[340px] flex flex-col justify-end p-6 sm:p-8"
+            className="w-full group relative rounded-3xl overflow-hidden bg-[#0a0a1a] border border-gray-200 dark:border-white/10 hover:border-[#7FB706]/50 shadow-xl cursor-pointer min-h-[360px] flex flex-col justify-end p-6 sm:p-8"
           >
             <div className="absolute inset-0 z-0">
               <ImageWithFallback
@@ -930,7 +930,7 @@ function CategoryBentoGrid({ navigate }: { navigate: (path: string) => void }) {
             </div>
           </motion.div>
 
-          {/* Card 4: Kids Toilet (Span 2 cols on lg) */}
+          {/* Card 4: Kids Cubicles */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -938,7 +938,7 @@ function CategoryBentoGrid({ navigate }: { navigate: (path: string) => void }) {
             transition={{ delay: 0.3 }}
             whileHover={{ y: -4 }}
             onClick={() => navigate("/products/kids-toilet")}
-            className="md:col-span-1 lg:col-span-2 group relative rounded-3xl overflow-hidden bg-[#0a0a1a] border border-gray-200 dark:border-white/10 hover:border-[#7FB706]/50 shadow-xl cursor-pointer min-h-[340px] flex flex-col justify-end p-6 sm:p-8"
+            className="w-full group relative rounded-3xl overflow-hidden bg-[#0a0a1a] border border-gray-200 dark:border-white/10 hover:border-[#7FB706]/50 shadow-xl cursor-pointer min-h-[360px] flex flex-col justify-end p-6 sm:p-8"
           >
             <div className="absolute inset-0 z-0">
               <ImageWithFallback

@@ -2,8 +2,8 @@ import { useState } from "react";
 import { Link } from "react-router";
 import { Facebook, Youtube, Linkedin, Instagram, Mail, Phone, MapPin, Clock } from "lucide-react";
 import { useProducts, useSolutions } from "../../lib/hooks";
-// @ts-ignore
-import logo from "../../../public/logo.png";
+
+const logo = "/logo.png";
 
 export function Footer() {
   const [showUpdate, setShowUpdate] = useState(false);

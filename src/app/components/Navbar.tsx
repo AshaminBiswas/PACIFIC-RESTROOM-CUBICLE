@@ -6,8 +6,8 @@ import { Button } from "./Button";
 import { ThemeToggle } from "./ThemeToggle";
 import { useProducts } from "../../lib/hooks";
 import type { Product } from "../../lib/database.types";
-// @ts-ignore
-import logo from "../../../public/logo.png";
+
+const logo = "/logo.png";
 
 function toCategorySlug(category: string | undefined) {
   if (!category) return "";
@@ -166,7 +166,7 @@ export function Navbar() {
       })),
     },
     {
-      name: "Kids Toilet",
+      name: "Kids Cubicle",
       categorySlug: "kids-toilet",
       viewAllPath: "/products/kids-toilet",
       dropdownColumns: 1,
