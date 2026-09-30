@@ -55,12 +55,9 @@ const iconMap: Record<string, LucideIcon> = {
 const serviceIcons: LucideIcon[] = [DoorOpen, ShowerHead, MenuSquare, Layers3, Wrench, Building2];
 
 const adjacentLocations: Record<LocationSlug, string[]> = {
-  delhi: ["mumbai", "bangalore", "ahmedabad"],
-  mumbai: ["delhi", "uae", "ahmedabad"],
-  bangalore: ["mumbai", "delhi", "uae"],
-  ahmedabad: ["delhi", "mumbai", "bangalore"],
-  kolkata: ["delhi", "mumbai", "bangalore"],
-  uae: ["mumbai", "delhi", "bangalore"],
+  delhi: ["bangalore", "kolkata"],
+  bangalore: ["delhi", "kolkata"],
+  kolkata: ["delhi", "bangalore"],
 };
 
 function cleanText(value: string) {
@@ -231,58 +228,8 @@ function LocationHeroSlider({ images, altText }: { images: string[], altText: st
 }
 
 function HeroSection({ data, slug }: { data: LocationData; slug: LocationSlug }) {
-  const isMumbai = slug === "mumbai";
-  const isDubai = slug === "uae";
   const isDelhi = slug === "delhi";
   const isBangalore = slug === "bangalore";
-
-  if (isMumbai) {
-    return (
-      <section className="relative overflow-hidden bg-[#030213] pt-20 text-white">
-        <div className="absolute inset-y-0 right-0 w-full opacity-55 lg:w-[58%]">
-          <img src={data.heroImage} alt={`${cleanText(data.city)} commercial infrastructure solutions`} className="h-full w-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#030213] via-[#030213]/75 to-[#030213]/20" />
-        </div>
-        <div className="container relative z-10 mx-auto px-4 pb-24 pt-8 sm:px-6 lg:px-8 lg:pb-32 lg:pt-12">
-          <Link to="/contact" className="mb-10 inline-flex items-center gap-2 text-sm font-semibold text-white/70 transition hover:text-[#B5F823]">
-            <ChevronLeft className="h-4 w-4" />
-            All Locations
-          </Link>
-          <div className="max-w-2xl">
-            <Eyebrow>{cleanText(data.region)}</Eyebrow>
-            <h1 className="mt-6 text-5xl font-bold leading-[1.02] sm:text-6xl lg:text-7xl">{cleanText(data.tagline)}</h1>
-            <p className="mt-7 text-lg leading-8 text-white/75">{cleanText(data.description)}</p>
-            <HeroActions data={data} light />
-          </div>
-        </div>
-      </section>
-    );
-  }
-
-  if (isDubai) {
-    return (
-      <section className="relative min-h-[760px] overflow-hidden bg-[#030213] text-white">
-        <img src={data.heroImage} alt={`${cleanText(data.city)} luxury commercial interiors`} className="absolute inset-0 h-full w-full object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#030213]/50 via-[#030213]/60 to-[#030213]" />
-        <div className="container relative z-10 mx-auto flex min-h-[760px] flex-col justify-end px-4 pb-16 pt-16 sm:px-6 lg:px-8">
-          <Link to="/contact" className="mb-auto inline-flex w-fit items-center gap-2 text-sm font-semibold text-white/75 transition hover:text-[#B5F823]">
-            <ChevronLeft className="h-4 w-4" />
-            All Locations
-          </Link>
-          <div className="grid items-end gap-10 lg:grid-cols-[1.1fr_0.9fr]">
-            <div>
-              <Eyebrow>{cleanText(data.region)}</Eyebrow>
-              <h1 className="mt-6 max-w-4xl text-5xl font-bold leading-[1.02] sm:text-6xl lg:text-7xl">{cleanText(data.tagline)}</h1>
-            </div>
-            <div className="border-l border-white/25 pl-6">
-              <p className="text-lg leading-8 text-white/78">{cleanText(data.description)}</p>
-              <HeroActions data={data} light />
-            </div>
-          </div>
-        </div>
-      </section>
-    );
-  }
 
   return (
     <section className={`relative overflow-hidden pt-20 ${isDelhi ? "bg-[#f7f8f3]" : "bg-white"} dark:bg-[#030213]`}>
@@ -439,46 +386,8 @@ function IndustrySection({ data, dark = false }: { data: LocationData; dark?: bo
   );
 }
 
-function ShowcaseSection({ data, variant }: { data: LocationData; variant: "mosaic" | "editorial" | "band" | "stack" | "gallery" }) {
+function ShowcaseSection({ data, variant }: { data: LocationData; variant: "mosaic" | "stack" }) {
   const images = data.galleryImages;
-
-  if (variant === "band") {
-    return (
-      <section className="bg-white py-24 dark:bg-[#030213]">
-        <div className="mb-12 px-4 sm:px-6 lg:px-8">
-          <div className="container mx-auto">
-            <SectionHeading eyebrow="Visual Product Showcase" title={`${cleanText(data.city)} project finish palette`} copy="Architectural surfaces, durable cubicle systems, hardware detailing, and clean commercial interiors composed for premium B2B spaces." />
-          </div>
-        </div>
-        <div className="grid h-auto grid-cols-1 md:h-[520px] md:grid-cols-4">
-          {images.slice(0, 4).map((image, index) => (
-            <img key={image} src={image} alt={`${cleanText(data.city)} commercial product showcase ${index + 1}`} className="h-80 w-full object-cover md:h-full" />
-          ))}
-        </div>
-      </section>
-    );
-  }
-
-  if (variant === "editorial") {
-    return (
-      <section className="bg-white py-24 dark:bg-[#030213]">
-        <div className="container mx-auto grid gap-8 px-4 sm:px-6 lg:grid-cols-[1.2fr_0.8fr] lg:px-8">
-          <div>
-            <SectionHeading eyebrow="Visual Product Showcase" title="Commercial-grade details with a refined architectural presence" />
-            <img src={images[0]} alt={`${cleanText(data.city)} interior architecture`} className="h-[620px] w-full object-cover" />
-          </div>
-          <div className="grid gap-8">
-            <img src={images[1]} alt={`${cleanText(data.city)} restroom cubicle installation`} className="h-72 w-full object-cover" />
-            <div className="bg-[#030213] p-8 text-white">
-              <Sparkles className="h-8 w-8 text-[#B5F823]" />
-              <p className="mt-8 text-2xl font-bold leading-snug">Precision finishes for corporate, transit, retail, hospitality, and institutional spaces.</p>
-            </div>
-            <img src={images[2]} alt={`${cleanText(data.city)} exterior cladding system`} className="h-72 w-full object-cover" />
-          </div>
-        </div>
-      </section>
-    );
-  }
 
   if (variant === "stack") {
     return (
@@ -490,26 +399,6 @@ function ShowcaseSection({ data, variant }: { data: LocationData; variant: "mosa
               <div key={image} className={index === 1 || index === 4 ? "lg:translate-y-12" : ""}>
                 <img src={image} alt={`${cleanText(data.city)} infrastructure solution ${index + 1}`} className="h-96 w-full object-cover" />
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-    );
-  }
-
-  if (variant === "gallery") {
-    return (
-      <section className="bg-white py-24 dark:bg-[#030213]">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionHeading eyebrow="Visual Product Showcase" title="A premium material language for Gulf commercial projects" copy="Balanced between clean corporate interiors, hospitality-grade surfaces, and robust public-use systems." />
-          <div className="grid auto-rows-[240px] gap-4 md:grid-cols-4">
-            {images.slice(0, 6).map((image, index) => (
-              <img
-                key={image}
-                src={image}
-                alt={`${cleanText(data.city)} premium commercial showcase ${index + 1}`}
-                className={`h-full w-full object-cover ${index === 0 ? "md:col-span-2 md:row-span-2" : ""} ${index === 3 ? "md:col-span-2" : ""}`}
-              />
             ))}
           </div>
         </div>
@@ -709,19 +598,6 @@ function renderLocationFlow(data: LocationData, slug: LocationSlug) {
           <MapSection data={data} />
         </>
       );
-    case "mumbai":
-      return (
-        <>
-          <IndustrySection data={data} dark />
-          <ServicesSection data={data} layout="rail" />
-          <ShowcaseSection data={data} variant="editorial" />
-          <ProjectsCredibility data={data} />
-          <WhyChooseSection data={data} compact />
-          <InquirySection data={data} slug={slug} />
-          <FaqSection data={data} />
-          <MapSection data={data} />
-        </>
-      );
     case "bangalore":
       return (
         <>
@@ -732,32 +608,6 @@ function renderLocationFlow(data: LocationData, slug: LocationSlug) {
           <FaqSection data={data} />
           <ProjectsCredibility data={data} />
           <InquirySection data={data} slug={slug} />
-          <MapSection data={data} />
-        </>
-      );
-    case "ahmedabad":
-      return (
-        <>
-          <ServicesSection data={data} layout="split" />
-          <IndustrySection data={data} />
-          <ProjectsCredibility data={data} />
-          <ShowcaseSection data={data} variant="band" />
-          <WhyChooseSection data={data} />
-          <FaqSection data={data} />
-          <InquirySection data={data} slug={slug} />
-          <MapSection data={data} />
-        </>
-      );
-    case "uae":
-      return (
-        <>
-          <ShowcaseSection data={data} variant="gallery" />
-          <WhyChooseSection data={data} />
-          <ServicesSection data={data} layout="rail" />
-          <IndustrySection data={data} dark />
-          <ProjectsCredibility data={data} />
-          <InquirySection data={data} slug={slug} />
-          <FaqSection data={data} />
           <MapSection data={data} />
         </>
       );
@@ -782,6 +632,13 @@ function renderLocationFlow(data: LocationData, slug: LocationSlug) {
 export default function LocationPage() {
   const { location } = useParams<{ location: string }>();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (location && ["mumbai", "ahmedabad", "uae"].includes(location.toLowerCase())) {
+      navigate("/contact", { replace: true });
+    }
+  }, [location, navigate]);
+
   const slug = location as LocationSlug | undefined;
   const data = slug ? locations[slug] : null;
   const { data: locationImages } = useLocationGallery(slug);
@@ -798,6 +655,8 @@ export default function LocationPage() {
     );
   }
 
+  const geoRegion = slug === 'delhi' ? 'IN-DL' : slug === 'bangalore' ? 'IN-KA' : 'IN-WB';
+
   return (
     <main className="min-h-screen bg-white text-[#030213] dark:bg-[#030213] dark:text-white">
       <SEO
@@ -805,8 +664,8 @@ export default function LocationPage() {
         description={cleanText(pageData.meta.description)}
         keywords={pageData.meta.keywords ? cleanText(pageData.meta.keywords) : undefined}
         canonical={`/locations/${slug}`}
-        geoRegion={slug === 'delhi' ? 'IN-DL' : slug === 'mumbai' ? 'IN-MH' : slug === 'bangalore' ? 'IN-KA' : slug === 'ahmedabad' ? 'IN-GJ' : slug === 'kolkata' ? 'IN-WB' : slug === 'uae' ? 'AE-DU' : 'IN-DL'}
-        geoPlacename={`${cleanText(pageData.city)}, ${slug === 'uae' ? 'United Arab Emirates' : 'India'}`}
+        geoRegion={geoRegion}
+        geoPlacename={`${cleanText(pageData.city)}, India`}
         jsonLd={[
           localBusinessSchema({city: cleanText(pageData.city), address: cleanText(pageData.address), phone: pageData.phone, email: pageData.email, region: cleanText(pageData.region)}),
           breadcrumbSchema([{name: 'Home', url: '/'}, {name: 'Locations', url: '/contact'}, {name: cleanText(pageData.city), url: `/locations/${slug}`}]),

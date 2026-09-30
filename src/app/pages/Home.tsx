@@ -1530,8 +1530,8 @@ export default function HomePage() {
           aggregateRatingSchema(),
           speakableSchema(["h1", "h2", ".speakable"]),
           faqSchema([
-            { question: "What products does Pacific Products & Solutions manufacture?", answer: "Pacific Products & Solutions manufactures premium restroom cubicles, toilet partitions, shower cubicles, exterior cladding, locker systems, wall paneling, and custom hardware for commercial spaces across India and the UAE." },
-            { question: "Where is Pacific Products & Solutions located?", answer: "Pacific Products & Solutions has offices in Delhi (head office), Mumbai, Bangalore, Ahmedabad, Kolkata, and Dubai UAE. They serve pan-India and international clients." },
+            { question: "What products does Pacific Products & Solutions manufacture?", answer: "Pacific Products & Solutions manufactures premium restroom cubicles, toilet partitions, shower cubicles, exterior cladding, locker systems, wall paneling, and custom hardware for commercial spaces across India." },
+            { question: "Where is Pacific Products & Solutions located?", answer: "Pacific Products & Solutions has regional hubs in Delhi NCR (Head Office), Bangalore, and Kolkata, serving pan-India commercial and institutional clients." },
             { question: "What is the warranty on Pacific Products installations?", answer: "All Pacific Products installations come with a 10-year compact board warranty and a 1-year direct hardware replacement warranty." },
           ])
         ]}

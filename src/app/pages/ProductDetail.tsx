@@ -95,6 +95,24 @@ export default function ProductDetailPage() {
   const [currentMain, setCurrentMain] = useState<string | null>(null);
   const [activeColorIdx, setActiveColorIdx] = useState(0);
 
+  // Guard: if slug is a category name (e.g. /products/restroom-cubicles), redirect to category page
+  useEffect(() => {
+    const raw = (slug || "").toLowerCase().trim();
+    const isCategory = [
+      "restroom-cubicles",
+      "lockers",
+      "urinal-partitions",
+      "kids-toilet",
+      "cubicles",
+      "cubicle",
+      "locker-systems",
+      "urinal-partition",
+    ].includes(raw);
+    if (isCategory && !productSlug) {
+      navigate(`/products/${raw}`, { replace: true });
+    }
+  }, [slug, productSlug, navigate]);
+
   // Redirect old /products/:slug URLs to /products/:categorySlug/:productSlug
   useEffect(() => {
     if (product && slug && !productSlug) {

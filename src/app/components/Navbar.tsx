@@ -122,7 +122,7 @@ export function Navbar() {
     {
       name: "Cubicles",
       categorySlug: "restroom-cubicles",
-      viewAllPath: "/products?category=Restroom%20Cubicles",
+      viewAllPath: "/products/restroom-cubicles",
       dropdownColumns: 2,
       align: "left",
       dropdown: cubicleProducts.map((p) => ({
@@ -138,7 +138,7 @@ export function Navbar() {
     {
       name: "Lockers",
       categorySlug: "lockers",
-      viewAllPath: "/products?category=Lockers",
+      viewAllPath: "/products/lockers",
       dropdownColumns: 2,
       align: "center",
       dropdown: lockerProducts.map((p) => ({
@@ -153,7 +153,7 @@ export function Navbar() {
     {
       name: "Urinal Partitions",
       categorySlug: "urinal-partitions",
-      viewAllPath: "/products?category=Urinal%20Partitions",
+      viewAllPath: "/products/urinal-partitions",
       dropdownColumns: 1,
       align: "center",
       dropdown: urinalProducts.map((p) => ({
@@ -168,7 +168,7 @@ export function Navbar() {
     {
       name: "Kids Toilet",
       categorySlug: "kids-toilet",
-      viewAllPath: "/products?category=Kids%20Toilet",
+      viewAllPath: "/products/kids-toilet",
       dropdownColumns: 1,
       align: "right",
       dropdown: kidsProducts.map((p) => ({

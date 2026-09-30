@@ -8,7 +8,22 @@ import { useProducts } from "../../lib/hooks";
 export function FeaturedServices() {
   const navigate = useNavigate();
   const { data: allProducts, loading } = useProducts();
-  const featuredProducts = allProducts?.filter(p => p.is_featured).slice(0, 3) || [];
+  const realProducts = (allProducts || []).filter(
+    (p) => p.published !== false && !p.id?.startsWith("prod-") && !p.id?.startsWith("demo-")
+  );
+  const activePool = realProducts.length > 0 ? realProducts : (allProducts || []);
+  const explicitlyFeatured = activePool.filter((p) => p.is_featured);
+  const featuredProducts = (explicitlyFeatured.length > 0 ? explicitlyFeatured : activePool).slice(0, 3);
+
+  const toCategorySlug = (category: string | undefined) => {
+    if (!category) return "restroom-cubicles";
+    const cat = category.toLowerCase().trim();
+    if (cat.includes("cubicle") && !cat.includes("kid")) return "restroom-cubicles";
+    if (cat.includes("locker")) return "lockers";
+    if (cat.includes("urinal") || cat.includes("partition")) return "urinal-partitions";
+    if (cat.includes("kid")) return "kids-toilet";
+    return cat.replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+  };
 
   return (
     <section className="pt-12 sm:pt-16 md:pt-20 lg:pt-24 pb-12 sm:pb-16 md:pb-20 lg:pb-24 bg-transparent dark:bg-[#030213] text-gray-900 dark:text-white transition-colors">
@@ -32,12 +47,8 @@ export function FeaturedServices() {
         ) : featuredProducts.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
             {featuredProducts.map((product) => {
-              const catSlug = product.category
-                ? product.category.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")
-                : "";
-              const productPath = catSlug
-                ? `/products/${catSlug}/${product.slug}`
-                : `/products/${product.slug}`;
+              const catSlug = toCategorySlug(product.category);
+              const productPath = `/products/${catSlug}/${product.slug}`;
               return (
                 <ProductCard
                   key={product.id}

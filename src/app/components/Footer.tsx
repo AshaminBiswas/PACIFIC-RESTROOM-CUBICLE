@@ -10,14 +10,13 @@ export function Footer() {
   const { data: products } = useProducts();
   const { data: solutions } = useSolutions();
 
-  const productCategories = products && products.length > 0
-    ? Array.from(new Set(products.map(p => p.category).filter(Boolean))).slice(0, 6)
-    : ["Restroom Cubicles", "Shower Cubicles", "Exterior Cladding", "Locker System", "Custom Hardware", "Others"];
-
-  const productLinks = productCategories.map(c => ({
-    name: c,
-    path: `/products?category=${encodeURIComponent(c)}`
-  }));
+  const productLinks = [
+    { name: "Restroom Cubicles", path: "/products/restroom-cubicles" },
+    { name: "Modular Lockers", path: "/products/lockers" },
+    { name: "Urinal Partitions", path: "/products/urinal-partitions" },
+    { name: "Kids Safety Cubicles", path: "/products/kids-toilet" },
+    { name: "All Architectural Models", path: "/products" },
+  ];
 
   const solutionTitles = solutions && solutions.length > 0
     ? Array.from(new Set(solutions.map(s => s.title).filter(Boolean))).slice(0, 7)
@@ -42,11 +41,8 @@ export function Footer() {
 
   const locationLinks = [
     { name: "Delhi", path: "/locations/delhi" },
-    { name: "Mumbai", path: "/locations/mumbai" },
     { name: "Bangalore", path: "/locations/bangalore" },
-    { name: "Ahmedabad", path: "/locations/ahmedabad" },
     { name: "Kolkata", path: "/locations/kolkata" },
-    { name: "UAE", path: "/locations/uae" },
   ];
 
   return (

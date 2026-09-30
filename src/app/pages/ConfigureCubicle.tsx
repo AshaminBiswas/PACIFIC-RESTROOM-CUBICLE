@@ -1114,7 +1114,7 @@ Estimated Commercial Quote:
                   required
                   value={leadForm.city}
                   onChange={handleFormChange}
-                  placeholder="e.g. Mumbai, Gurgaon, Noida, Bangalore"
+                  placeholder="e.g. Delhi NCR, Gurgaon, Bangalore, Kolkata"
                   className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#7FB706] transition-colors text-sm"
                 />
               </div>

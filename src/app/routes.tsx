@@ -108,7 +108,39 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "products/:slug",
+        path: "products/restroom-cubicles",
+        element: (
+          <Suspense fallback={<ProductsSkeleton />}>
+            <Products categorySlug="restroom-cubicles" />
+          </Suspense>
+        ),
+      },
+      {
+        path: "products/lockers",
+        element: (
+          <Suspense fallback={<ProductsSkeleton />}>
+            <Products categorySlug="lockers" />
+          </Suspense>
+        ),
+      },
+      {
+        path: "products/urinal-partitions",
+        element: (
+          <Suspense fallback={<ProductsSkeleton />}>
+            <Products categorySlug="urinal-partitions" />
+          </Suspense>
+        ),
+      },
+      {
+        path: "products/kids-toilet",
+        element: (
+          <Suspense fallback={<ProductsSkeleton />}>
+            <Products categorySlug="kids-toilet" />
+          </Suspense>
+        ),
+      },
+      {
+        path: "products/:categorySlug/:productSlug",
         element: (
           <Suspense fallback={<ProductDetailSkeleton />}>
             <ProductDetail />
@@ -116,7 +148,7 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "products/:categorySlug/:productSlug",
+        path: "products/:slug",
         element: (
           <Suspense fallback={<ProductDetailSkeleton />}>
             <ProductDetail />

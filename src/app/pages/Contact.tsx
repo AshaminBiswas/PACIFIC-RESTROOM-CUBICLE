@@ -22,13 +22,6 @@ export default function ContactPage() {
       email: "info@pacificproduct.in",
     },
     {
-      city: "Mumbai",
-      slug: "mumbai",
-      address: "Andheri East, Mumbai, Maharashtra, India",
-      phone: "+91 98185 92113",
-      email: "info@pacificproduct.in",
-    },
-    {
       city: "Bangalore",
       slug: "bangalore",
       address: "Bangalore, Karnataka, India",
@@ -41,13 +34,6 @@ export default function ContactPage() {
       address: "Salt Lake Sector V, Kolkata - 700091, West Bengal, India",
       phone: "+91 98185 92113",
       email: "info@pacificproduct.in",
-    },
-    {
-      city: "Dubai, UAE",
-      slug: "uae",
-      address: "Al Quoz Industrial Area 3, Dubai, United Arab Emirates",
-      phone: "+971 4 333 4444",
-      email: "ejaj@pacificproduct.in",
     },
   ];
 
@@ -176,7 +162,7 @@ export default function ContactPage() {
           >
             <h2 className="text-4xl sm:text-5xl font-bold text-white mb-6">Our Locations</h2>
             <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-              Find us across major cities in India and the UAE
+              Find our regional offices and fabrication centers across India
             </p>
           </motion.div>
 
