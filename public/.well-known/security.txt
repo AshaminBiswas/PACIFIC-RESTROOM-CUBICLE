@@ -2,6 +2,6 @@ Contact: mailto:security@pacificproduct.in
 Contact: mailto:info@pacificproduct.in
 Expires: 2027-12-31T23:59:59.000Z
 Preferred-Languages: en, hi
-Canonical: https://pacificproduct.in/.well-known/security.txt
-Policy: https://pacificproduct.in/privacy
-Acknowledgments: https://pacificproduct.in/about
+Canonical: https://www.pacificproduct.in/.well-known/security.txt
+Policy: https://www.pacificproduct.in/privacy
+Acknowledgments: https://www.pacificproduct.in/about

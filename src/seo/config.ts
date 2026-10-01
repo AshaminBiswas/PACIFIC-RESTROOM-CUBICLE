@@ -1,6 +1,6 @@
 // ── Core SEO Configuration & Metadata Constants ─────────────────────────
 export const SITE_NAME = "Pacific Products & Solutions";
-export const SITE_URL = "https://pacificproduct.in";
+export const SITE_URL = "https://www.pacificproduct.in";
 export const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.png`;
 export const TWITTER_HANDLE = "@pacificcubicles";
 

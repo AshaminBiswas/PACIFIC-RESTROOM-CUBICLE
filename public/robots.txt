@@ -1,5 +1,5 @@
 # Pacific Products & Solutions - robots.txt
-# https://pacificproduct.in
+# https://www.pacificproduct.in
 
 # ── Standard crawlers ────────────────────────────────────────────
 User-agent: *
@@ -60,5 +60,5 @@ User-agent: CCBot
 Allow: /
 
 # ── Sitemap ───────────────────────────────────────────────────────
-Sitemap: https://pacificproduct.in/sitemap.xml
-Sitemap: https://pacificproduct.in/llms.txt
+Sitemap: https://www.pacificproduct.in/sitemap.xml
+Sitemap: https://www.pacificproduct.in/llms.txt
