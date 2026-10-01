@@ -40,9 +40,12 @@ export function Footer() {
   ];
 
   const locationLinks = [
-    { name: "Delhi", path: "/locations/delhi" },
+    { name: "Delhi NCR", path: "/locations/delhi" },
+    { name: "Mumbai", path: "/locations/mumbai" },
     { name: "Bangalore", path: "/locations/bangalore" },
+    { name: "Ahmedabad", path: "/locations/ahmedabad" },
     { name: "Kolkata", path: "/locations/kolkata" },
+    { name: "Dubai UAE", path: "/locations/uae" },
   ];
 
   return (

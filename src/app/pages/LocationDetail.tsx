@@ -55,9 +55,12 @@ const iconMap: Record<string, LucideIcon> = {
 const serviceIcons: LucideIcon[] = [DoorOpen, ShowerHead, MenuSquare, Layers3, Wrench, Building2];
 
 const adjacentLocations: Record<LocationSlug, string[]> = {
-  delhi: ["bangalore", "kolkata"],
-  bangalore: ["delhi", "kolkata"],
-  kolkata: ["delhi", "bangalore"],
+  delhi: ["mumbai", "bangalore", "kolkata"],
+  bangalore: ["delhi", "mumbai", "kolkata"],
+  kolkata: ["delhi", "bangalore", "mumbai"],
+  mumbai: ["delhi", "ahmedabad", "bangalore"],
+  ahmedabad: ["mumbai", "delhi", "bangalore"],
+  uae: ["delhi", "mumbai", "bangalore"],
 };
 
 function cleanText(value: string) {
@@ -655,7 +658,16 @@ export default function LocationPage() {
     );
   }
 
-  const geoRegion = slug === 'delhi' ? 'IN-DL' : slug === 'bangalore' ? 'IN-KA' : 'IN-WB';
+  const geoRegionMap: Record<LocationSlug, string> = {
+    delhi: 'IN-DL',
+    bangalore: 'IN-KA',
+    kolkata: 'IN-WB',
+    mumbai: 'IN-MH',
+    ahmedabad: 'IN-GJ',
+    uae: 'AE-DU',
+  };
+  const geoRegion = geoRegionMap[slug] || 'IN-DL';
+  const countryName = slug === 'uae' ? 'UAE' : 'India';
 
   return (
     <main className="min-h-screen bg-white text-[#030213] dark:bg-[#030213] dark:text-white">
@@ -665,7 +677,7 @@ export default function LocationPage() {
         keywords={pageData.meta.keywords ? cleanText(pageData.meta.keywords) : undefined}
         canonical={`/locations/${slug}`}
         geoRegion={geoRegion}
-        geoPlacename={`${cleanText(pageData.city)}, India`}
+        geoPlacename={`${cleanText(pageData.city)}, ${countryName}`}
         jsonLd={[
           localBusinessSchema({city: cleanText(pageData.city), address: cleanText(pageData.address), phone: pageData.phone, email: pageData.email, region: cleanText(pageData.region)}),
           breadcrumbSchema([{name: 'Home', url: '/'}, {name: 'Locations', url: '/contact'}, {name: cleanText(pageData.city), url: `/locations/${slug}`}]),
