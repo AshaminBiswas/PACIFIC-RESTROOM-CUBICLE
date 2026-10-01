@@ -17,7 +17,7 @@ export default function BlogDetailPage() {
   if (loading) {
     return (
       <div className="min-h-screen pt-20 flex items-center justify-center bg-white dark:bg-[#030213]">
-        <div className="animate-pulse text-gray-400 text-lg">Loading…</div>
+        <div className="w-8 h-8 rounded-full border-2 border-black/10 dark:border-white/10 border-t-[#7FB706] animate-spin" />
       </div>
     );
   }

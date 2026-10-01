@@ -121,13 +121,6 @@ export default function Downloads() {
                     </button>
                   );
                 })}
-                {loading && (
-                  <div className="space-y-3">
-                    {[1, 2, 3, 4].map(i => (
-                      <div key={i} className="h-12 bg-gray-200 dark:bg-white/5 rounded-xl animate-pulse"></div>
-                    ))}
-                  </div>
-                )}
               </nav>
             </div>
           </div>
@@ -135,10 +128,9 @@ export default function Downloads() {
           {/* Main Content */}
           <div className="lg:w-3/4">
             {loading ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                 {[1, 2, 3, 4].map(i => (
-                    <div key={i} className="h-48 bg-gray-50 dark:bg-[#0a0a1a] border border-gray-200 dark:border-white/5 rounded-2xl animate-pulse"></div>
-                 ))}
+              <div className="py-20 flex flex-col items-center justify-center gap-3">
+                <div className="w-8 h-8 rounded-full border-2 border-black/10 dark:border-white/10 border-t-[#7FB706] animate-spin" />
+                <p className="text-sm text-gray-500 dark:text-gray-400">Loading documents...</p>
               </div>
             ) : filteredDownloads.length === 0 ? (
               <div className="bg-gray-50 dark:bg-[#0a0a1a] border border-gray-200 dark:border-white/5 rounded-2xl p-16 text-center">
