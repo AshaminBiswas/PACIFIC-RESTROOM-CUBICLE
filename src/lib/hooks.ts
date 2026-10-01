@@ -131,14 +131,16 @@ export function useProduct(slug: string | undefined): UseSingleResult<Product> {
           .eq("slug", slug!)
           .single();
         if (err || !row) {
-          setData(null);
+          const fallback = demoProducts.find((p) => p.slug === slug) || null;
+          setData(fallback);
         } else {
           setData(row as Product);
         }
       } catch (e: any) {
-        console.error("Failed to fetch product:", e);
-        setError(e.message);
-        setData(null);
+        console.error("Failed to fetch product from DB, attempting demo fallback:", e);
+        const fallback = demoProducts.find((p) => p.slug === slug) || null;
+        setData(fallback);
+        setError(fallback ? null : e.message);
       } finally {
         setLoading(false);
       }

@@ -2,6 +2,7 @@ import { motion } from "motion/react";
 import { ProductCard } from "../components/ProductCard";
 import { useSearchParams, useParams, Link, useNavigate } from "react-router";
 import { useProducts, usePageBanner } from "../../lib/hooks";
+import { demoProducts } from "../../lib/demo-data";
 import { SEO } from "../components/SEO";
 import { DEFAULT_KEYWORDS, itemListSchema, faqSchema } from "../../lib/seo-data";
 import { PageHero } from "../components/PageHero";
@@ -93,11 +94,14 @@ export default function ProductsPage({ categorySlug: propCategorySlug }: Product
 
   const activeCategoryMeta = activeSlug ? CATEGORY_DEFINITIONS[activeSlug] : null;
 
-  // Separate real database models from demo/fallback items
-  const realProducts = (products || []).filter(
-    (p) => p.published !== false && !p.id?.startsWith("prod-") && !p.id?.startsWith("demo-")
-  );
-  const activePool = realProducts.length > 0 ? realProducts : (products || []);
+  // Merge database models with demo models to ensure all categories
+  // (Restroom Cubicles, Lockers, Urinal Partitions, Kids Cubicle) always display their full catalog of cards
+  const activePool = (() => {
+    const list = (products || []).filter((p) => p.published !== false);
+    const dbOnly = list.filter((p) => !p.id?.startsWith("prod-") && !p.id?.startsWith("demo-"));
+    const dbSlugs = new Set(dbOnly.map((p) => p.slug));
+    return [...dbOnly, ...demoProducts.filter((dp) => !dbSlugs.has(dp.slug))];
+  })();
 
   // Filter products by selected category
   const filteredProducts = activeSlug

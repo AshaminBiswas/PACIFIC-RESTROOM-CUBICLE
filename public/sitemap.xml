@@ -87,6 +87,36 @@
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
+  <url>
+    <loc>https://pacificproduct.in/products/kids-cubicle</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://pacificproduct.in/cubicles</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://pacificproduct.in/lockers</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://pacificproduct.in/urinal-partitions</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://pacificproduct.in/kids-cubicle</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
 
   <!-- ── 3. Restroom Cubicle Models ─────────────────────────────────── -->
   <url>
@@ -197,6 +227,36 @@
     <image:image>
       <image:loc>https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&amp;fit=crop&amp;w=800&amp;q=80</image:loc>
       <image:title>AeroFit Nylon Restroom Cubicle</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://pacificproduct.in/products/restroom-cubicles/plarina-wave</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&amp;fit=crop&amp;w=800&amp;q=80</image:loc>
+      <image:title>Platina Wave Restroom Cubicle System</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://pacificproduct.in/products/restroom-cubicles/saffron</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&amp;fit=crop&amp;w=800&amp;q=80</image:loc>
+      <image:title>Saffron Designer Restroom Cubicle</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://pacificproduct.in/products/restroom-cubicles/sky-light</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&amp;fit=crop&amp;w=800&amp;q=80</image:loc>
+      <image:title>Sky Light Contemporary Restroom Cubicle</image:title>
     </image:image>
   </url>
 

@@ -5,6 +5,8 @@ import { Link } from "react-router";
 import { supabase, isSupabaseConfigured } from "../../lib/supabase";
 
 const CONSENT_KEY = "pacific_cookie_v2";
+const DISMISS_KEY = "pacific_cookie_dismissed_until";
+const THIRTY_MINUTES_MS = 30 * 60 * 1000; // 30 minutes in milliseconds
 
 // ── Device helpers ────────────────────────────────────────────────────────────
 
@@ -81,10 +83,34 @@ export default function CookieConsent() {
   const retryTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    if (!localStorage.getItem(CONSENT_KEY)) {
-      const t = setTimeout(() => setStep("consent"), 1600);
-      return () => clearTimeout(t);
-    }
+    // 1. If consent is already permanently accepted, never display
+    if (localStorage.getItem(CONSENT_KEY)) return;
+
+    // 2. Check if previously dismissed and 30 minutes have not elapsed
+    try {
+      const dismissedUntilRaw = localStorage.getItem(DISMISS_KEY);
+      const dismissedUntil = dismissedUntilRaw ? parseInt(dismissedUntilRaw, 10) : 0;
+      const now = Date.now();
+
+      if (dismissedUntil && now < dismissedUntil) {
+        // 30-minute window active: schedule appearance exactly when 30 minutes expire
+        const remaining = dismissedUntil - now;
+        retryTimer.current = setTimeout(() => {
+          if (!localStorage.getItem(CONSENT_KEY)) {
+            setStep("consent");
+            window.dispatchEvent(new CustomEvent("cookie-consent-change", { detail: { active: true } }));
+          }
+        }, remaining);
+        return;
+      }
+    } catch { /* silent */ }
+
+    // 3. Otherwise show initial consent prompt after gentle delay (1600ms)
+    const t = setTimeout(() => {
+      setStep("consent");
+      window.dispatchEvent(new CustomEvent("cookie-consent-change", { detail: { active: true } }));
+    }, 1600);
+    return () => clearTimeout(t);
   }, []);
 
   // Clean up retry timer on unmount
@@ -95,17 +121,30 @@ export default function CookieConsent() {
   }, []);
 
   const handleDecline = () => {
-    // Don't persist to localStorage — popup returns after a delay
     saveLead({ consent_given: false });
     setStep(null);
-    declineCount.current += 1;
-    // Delay increases slightly each time: 30s → 45s → 60s (cap)
-    const delay = Math.min(30_000 + (declineCount.current - 1) * 15_000, 60_000);
-    retryTimer.current = setTimeout(() => setStep("consent"), delay);
+
+    // Set 30 minutes from now (1,800,000 ms) before it auto-reappears
+    const nextShowTimestamp = Date.now() + THIRTY_MINUTES_MS;
+    try {
+      localStorage.setItem(DISMISS_KEY, nextShowTimestamp.toString());
+      window.dispatchEvent(new CustomEvent("cookie-consent-change", { detail: { active: false } }));
+    } catch { /* silent */ }
+
+    if (retryTimer.current) clearTimeout(retryTimer.current);
+    retryTimer.current = setTimeout(() => {
+      if (!localStorage.getItem(CONSENT_KEY)) {
+        setStep("consent");
+        window.dispatchEvent(new CustomEvent("cookie-consent-change", { detail: { active: true } }));
+      }
+    }, THIRTY_MINUTES_MS);
   };
 
   const handleAccept = () => {
     saveLead({ consent_given: true });
+    try {
+      localStorage.removeItem(DISMISS_KEY);
+    } catch { /* silent */ }
     setStep("newsletter");
   };
 
@@ -122,6 +161,10 @@ export default function CookieConsent() {
       await saveLead({ consent_given: true, email: email.trim() });
     }
     localStorage.setItem(CONSENT_KEY, JSON.stringify({ consent: true, ts: Date.now() }));
+    try {
+      localStorage.removeItem(DISMISS_KEY);
+      window.dispatchEvent(new CustomEvent("cookie-consent-change", { detail: { active: false } }));
+    } catch { /* silent */ }
     setSaving(false);
     setStep("done");
     setTimeout(() => setStep(null), 2200);

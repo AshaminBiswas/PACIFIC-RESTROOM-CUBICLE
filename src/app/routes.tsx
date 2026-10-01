@@ -140,6 +140,46 @@ export const router = createBrowserRouter([
         ),
       },
       {
+        path: "products/kids-cubicle",
+        element: (
+          <Suspense fallback={<ProductsSkeleton />}>
+            <Products categorySlug="kids-toilet" />
+          </Suspense>
+        ),
+      },
+      {
+        path: "cubicles",
+        element: (
+          <Suspense fallback={<ProductsSkeleton />}>
+            <Products categorySlug="restroom-cubicles" />
+          </Suspense>
+        ),
+      },
+      {
+        path: "lockers",
+        element: (
+          <Suspense fallback={<ProductsSkeleton />}>
+            <Products categorySlug="lockers" />
+          </Suspense>
+        ),
+      },
+      {
+        path: "urinal-partitions",
+        element: (
+          <Suspense fallback={<ProductsSkeleton />}>
+            <Products categorySlug="urinal-partitions" />
+          </Suspense>
+        ),
+      },
+      {
+        path: "kids-cubicle",
+        element: (
+          <Suspense fallback={<ProductsSkeleton />}>
+            <Products categorySlug="kids-toilet" />
+          </Suspense>
+        ),
+      },
+      {
         path: "products/:categorySlug/:productSlug",
         element: (
           <Suspense fallback={<ProductDetailSkeleton />}>

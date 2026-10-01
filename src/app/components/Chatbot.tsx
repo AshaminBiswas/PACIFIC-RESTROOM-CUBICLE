@@ -484,13 +484,26 @@ export function Chatbot() {
   // ── Cookie Consent Detect ──
   useEffect(() => {
     const checkConsent = () => {
-      const active = !localStorage.getItem("pacific_cookie_v2");
-      setIsCookieConsentActive(active);
+      if (localStorage.getItem("pacific_cookie_v2")) {
+        setIsCookieConsentActive(false);
+        return;
+      }
+      const dismissedUntilRaw = localStorage.getItem("pacific_cookie_dismissed_until");
+      const dismissedUntil = dismissedUntilRaw ? parseInt(dismissedUntilRaw, 10) : 0;
+      if (dismissedUntil && Date.now() < dismissedUntil) {
+        setIsCookieConsentActive(false);
+        return;
+      }
+      setIsCookieConsentActive(true);
     };
 
     checkConsent();
-    const interval = setInterval(checkConsent, 1000);
-    return () => clearInterval(interval);
+    const interval = setInterval(checkConsent, 2000);
+    window.addEventListener("cookie-consent-change", checkConsent);
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener("cookie-consent-change", checkConsent);
+    };
   }, []);
 
   // ── Init on first open ──

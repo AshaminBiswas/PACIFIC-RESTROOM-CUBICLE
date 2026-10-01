@@ -5,6 +5,7 @@ import { Menu, X, ChevronDown, ArrowRight } from "lucide-react";
 import { Button } from "./Button";
 import { ThemeToggle } from "./ThemeToggle";
 import { useProducts } from "../../lib/hooks";
+import { demoProducts } from "../../lib/demo-data";
 import type { Product } from "../../lib/database.types";
 
 const logo = "/logo.png";
@@ -87,29 +88,30 @@ export function Navbar() {
     };
   }, [isMobileMenuOpen]);
 
-  // Only show listed model data from database, strictly removing all dummy/demo products
-  const listedProducts = (allProducts || []).filter(
-    (p) =>
-      p.published !== false &&
-      !p.id?.startsWith("prod-") &&
-      !p.id?.startsWith("demo-")
-  );
+  // Merge database listed models with catalog models so all categories (Cubicles, Lockers, Urinals, Kids)
+  // have complete dropdown model lists and accurate card links
+  const effectiveProducts = (() => {
+    const list = (allProducts || []).filter((p) => p.published !== false);
+    const dbOnly = list.filter((p) => !p.id?.startsWith("prod-") && !p.id?.startsWith("demo-"));
+    const dbSlugs = new Set(dbOnly.map((p) => p.slug));
+    return [...dbOnly, ...demoProducts.filter((dp) => !dbSlugs.has(dp.slug))];
+  })();
 
-  // Categorize real listed products for dropdowns
-  const cubicleProducts = listedProducts.filter(
+  // Categorize products for dropdowns
+  const cubicleProducts = effectiveProducts.filter(
     (p) =>
       (p.category || "").toLowerCase().includes("cubicle") &&
       !(p.category || "").toLowerCase().includes("kid")
   );
-  const lockerProducts = listedProducts.filter((p) =>
+  const lockerProducts = effectiveProducts.filter((p) =>
     (p.category || "").toLowerCase().includes("locker")
   );
-  const urinalProducts = listedProducts.filter(
+  const urinalProducts = effectiveProducts.filter(
     (p) =>
       (p.category || "").toLowerCase().includes("urinal") ||
       (p.category || "").toLowerCase().includes("partition")
   );
-  const kidsProducts = listedProducts.filter((p) =>
+  const kidsProducts = effectiveProducts.filter((p) =>
     (p.category || "").toLowerCase().includes("kid")
   );
 
@@ -245,26 +247,42 @@ export function Navbar() {
                   onMouseLeave={() => setActiveDropdown(null)}
                 >
                   {item.dropdown ? (
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setActiveDropdown((prev) => (prev === item.name ? null : item.name))
-                      }
-                      className={`flex items-center space-x-1 py-2 text-xs xl:text-sm font-semibold transition-colors cursor-pointer ${
-                        active || isOpen
-                          ? "text-[#7FB706]"
-                          : isSolid
-                            ? "text-[#030213] dark:text-gray-200 hover:text-[#7FB706] dark:hover:text-[#7FB706]"
-                            : "text-white hover:text-[#7FB706]"
-                      }`}
-                    >
-                      <span>{item.name}</span>
-                      <ChevronDown
-                        className={`w-3.5 h-3.5 transition-transform duration-200 ${
-                          isOpen ? "rotate-180 text-[#7FB706]" : ""
+                    <div className="flex items-center">
+                      <Link
+                        to={item.viewAllPath || `/products/${item.categorySlug}`}
+                        onClick={() => setActiveDropdown(null)}
+                        className={`py-2 text-xs xl:text-sm font-semibold transition-colors cursor-pointer ${
+                          active || isOpen
+                            ? "text-[#7FB706]"
+                            : isSolid
+                              ? "text-[#030213] dark:text-gray-200 hover:text-[#7FB706] dark:hover:text-[#7FB706]"
+                              : "text-white hover:text-[#7FB706]"
                         }`}
-                      />
-                    </button>
+                      >
+                        <span>{item.name}</span>
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setActiveDropdown((prev) => (prev === item.name ? null : item.name));
+                        }}
+                        className={`p-1.5 ml-0.5 rounded-md transition-colors cursor-pointer ${
+                          active || isOpen
+                            ? "text-[#7FB706]"
+                            : isSolid
+                              ? "text-[#030213]/70 dark:text-gray-400 hover:text-[#7FB706]"
+                              : "text-white/80 hover:text-[#7FB706]"
+                        }`}
+                        aria-label={`Toggle ${item.name} dropdown`}
+                      >
+                        <ChevronDown
+                          className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                            isOpen ? "rotate-180 text-[#7FB706]" : ""
+                          }`}
+                        />
+                      </button>
+                    </div>
                   ) : (
                     <Link
                       to={item.path || "/"}
@@ -438,31 +456,43 @@ export function Navbar() {
                   <div key={item.name}>
                     {item.dropdown ? (
                       <>
-                        {/* Parent item with toggle */}
-                        <button
-                          type="button"
-                          onClick={() => toggleMobileDropdown(item.name)}
-                          className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-base font-medium transition-colors ${
+                        {/* Parent item with direct category page link & accordion toggle */}
+                        <div
+                          className={`w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-base font-medium transition-colors ${
                             activeMobileDropdown === item.name
                               ? "bg-[#E9FDBF] text-[#7FB706] dark:bg-[#7FB706]/20"
                               : "hover:bg-gray-50 text-[#030213] dark:text-gray-300 dark:hover:bg-white/5"
                           }`}
                         >
-                          <div className="flex items-center gap-2">
-                            <span>{item.name}</span>
-                            <span className="text-[11px] px-2 py-0.5 rounded-full bg-gray-100 dark:bg-white/10 text-gray-600 dark:text-gray-300">
+                          <Link
+                            to={item.viewAllPath || `/products/${item.categorySlug}`}
+                            onClick={() => {
+                              setIsMobileMenuOpen(false);
+                              setActiveMobileDropdown(null);
+                            }}
+                            className="flex items-center gap-2 flex-1 py-1"
+                          >
+                            <span className="font-semibold">{item.name}</span>
+                            <span className="text-[11px] px-2 py-0.5 rounded-full bg-gray-100 dark:bg-white/10 text-gray-600 dark:text-gray-300 font-normal">
                               {item.dropdown.length}
                             </span>
-                          </div>
-                          <motion.div
-                            animate={{
-                              rotate: activeMobileDropdown === item.name ? 180 : 0,
-                            }}
-                            transition={{ duration: 0.2 }}
+                          </Link>
+                          <button
+                            type="button"
+                            onClick={() => toggleMobileDropdown(item.name)}
+                            className="p-2 rounded-lg text-gray-400 hover:text-[#7FB706] dark:hover:text-[#7FB706] transition-colors"
+                            aria-label={`Toggle ${item.name} sub-models`}
                           >
-                            <ChevronDown className="w-5 h-5" />
-                          </motion.div>
-                        </button>
+                            <motion.div
+                              animate={{
+                                rotate: activeMobileDropdown === item.name ? 180 : 0,
+                              }}
+                              transition={{ duration: 0.2 }}
+                            >
+                              <ChevronDown className="w-5 h-5" />
+                            </motion.div>
+                          </button>
+                        </div>
 
                         {/* Accordion sub-items */}
                         <AnimatePresence>

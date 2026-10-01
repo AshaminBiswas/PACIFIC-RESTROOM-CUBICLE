@@ -248,12 +248,12 @@ export default function ProductDetailPage() {
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="hidden sm:flex items-center gap-2 text-sm text-gray-500 mb-8">
             <button onClick={() => navigate("/")} className="hover:text-[#B5F823] transition-colors">Home</button>
             <ChevronRight className="w-3.5 h-3.5" />
-            <button onClick={() => navigate("/products")} className="hover:text-[#B5F823] transition-colors">Services</button>
+            <button onClick={() => navigate("/products")} className="hover:text-[#B5F823] transition-colors">Products</button>
             {product.category && (
               <>
                 <ChevronRight className="w-3.5 h-3.5" />
                 <button
-                  onClick={() => navigate(`/products?category=${encodeURIComponent(product.category)}`)}
+                  onClick={() => navigate(`/products/${toCategorySlug(product.category) || 'restroom-cubicles'}`)}
                   className="hover:text-[#B5F823] transition-colors"
                 >
                   {product.category}
