@@ -5,7 +5,6 @@ import { Menu, X, ChevronDown, ArrowRight } from "lucide-react";
 import { Button } from "./Button";
 import { ThemeToggle } from "./ThemeToggle";
 import { useProducts } from "../../lib/hooks";
-import { demoProducts } from "../../lib/demo-data";
 import type { Product } from "../../lib/database.types";
 
 const logo = "/logo.png";
@@ -88,14 +87,10 @@ export function Navbar() {
     };
   }, [isMobileMenuOpen]);
 
-  // Merge database listed models with catalog models so all categories (Cubicles, Lockers, Urinals, Kids)
-  // have complete dropdown model lists and accurate card links
-  const effectiveProducts = (() => {
-    const list = (allProducts || []).filter((p) => p.published !== false);
-    const dbOnly = list.filter((p) => !p.id?.startsWith("prod-") && !p.id?.startsWith("demo-"));
-    const dbSlugs = new Set(dbOnly.map((p) => p.slug));
-    return [...dbOnly, ...demoProducts.filter((dp) => !dbSlugs.has(dp.slug))];
-  })();
+  // Only display listed models from the database (exclude hardcoded demo models)
+  const effectiveProducts = (allProducts || []).filter(
+    (p) => p.published !== false && !p.id?.startsWith("prod-") && !p.id?.startsWith("demo-")
+  );
 
   // Categorize products for dropdowns
   const cubicleProducts = effectiveProducts.filter(

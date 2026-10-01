@@ -118,122 +118,12 @@
     <priority>0.85</priority>
   </url>
 
-  <!-- ── 3. Restroom Cubicle Models ─────────────────────────────────── -->
-  <url>
-    <loc>https://www.pacificproduct.in/products/restroom-cubicles/cubicle-delight</loc>
-    <lastmod>2026-10-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&amp;fit=crop&amp;w=800&amp;q=80</image:loc>
-      <image:title>Delight Restroom Cubicle System</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://www.pacificproduct.in/products/restroom-cubicles/cubicle-skylight</loc>
-    <lastmod>2026-10-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&amp;fit=crop&amp;w=800&amp;q=80</image:loc>
-      <image:title>Skylight Restroom Cubicle System</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://www.pacificproduct.in/products/restroom-cubicles/cubicle-platina</loc>
-    <lastmod>2026-10-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&amp;fit=crop&amp;w=800&amp;q=80</image:loc>
-      <image:title>Platina Flagship Restroom Cubicle</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://www.pacificproduct.in/products/restroom-cubicles/cubicle-gusto</loc>
-    <lastmod>2026-10-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://images.unsplash.com/photo-1584622781564-1d987f7333c1?auto=format&amp;fit=crop&amp;w=800&amp;q=80</image:loc>
-      <image:title>Gusto Vandal-Resistant Cubicle</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://www.pacificproduct.in/products/restroom-cubicles/cubicle-skywings</loc>
-    <lastmod>2026-10-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://images.unsplash.com/photo-1595846519845-68e298c2edd8?auto=format&amp;fit=crop&amp;w=800&amp;q=80</image:loc>
-      <image:title>SkyWings Restroom Cubicle</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://www.pacificproduct.in/products/restroom-cubicles/cubicle-wall-hung</loc>
-    <lastmod>2026-10-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?auto=format&amp;fit=crop&amp;w=800&amp;q=80</image:loc>
-      <image:title>Wall Hung Suspended Cubicle</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://www.pacificproduct.in/products/restroom-cubicles/cubicle-saffron</loc>
-    <lastmod>2026-10-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&amp;fit=crop&amp;w=800&amp;q=80</image:loc>
-      <image:title>Saffron Contemporary Cubicle</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://www.pacificproduct.in/products/restroom-cubicles/cubicle-splendor</loc>
-    <lastmod>2026-10-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?auto=format&amp;fit=crop&amp;w=800&amp;q=80</image:loc>
-      <image:title>Splendor Luxury Restroom Cubicle</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://www.pacificproduct.in/products/restroom-cubicles/cubicle-platina-wave</loc>
-    <lastmod>2026-10-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&amp;fit=crop&amp;w=800&amp;q=80</image:loc>
-      <image:title>Platina Wave Restroom Cubicle</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://www.pacificproduct.in/products/restroom-cubicles/hpl-classic-restroom-cubicle</loc>
-    <lastmod>2026-10-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&amp;fit=crop&amp;w=800&amp;q=80</image:loc>
-      <image:title>Classic HPL Restroom Cubicle</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://www.pacificproduct.in/products/restroom-cubicles/aerofit-nylon-cubicle-system</loc>
-    <lastmod>2026-10-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&amp;fit=crop&amp;w=800&amp;q=80</image:loc>
-      <image:title>AeroFit Nylon Restroom Cubicle</image:title>
-    </image:image>
-  </url>
+  <!-- ── 3. Active Listed Restroom Cubicle Models ───────────────────── -->
   <url>
     <loc>https://www.pacificproduct.in/products/restroom-cubicles/plarina-wave</loc>
     <lastmod>2026-10-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
     <image:image>
       <image:loc>https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&amp;fit=crop&amp;w=800&amp;q=80</image:loc>
       <image:title>Platina Wave Restroom Cubicle System</image:title>
@@ -242,187 +132,31 @@
   <url>
     <loc>https://www.pacificproduct.in/products/restroom-cubicles/saffron</loc>
     <lastmod>2026-10-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
     <image:image>
       <image:loc>https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&amp;fit=crop&amp;w=800&amp;q=80</image:loc>
       <image:title>Saffron Designer Restroom Cubicle</image:title>
     </image:image>
   </url>
   <url>
+    <loc>https://www.pacificproduct.in/products/restroom-cubicles/cubicle-delight</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&amp;fit=crop&amp;w=800&amp;q=80</image:loc>
+      <image:title>Delight Restroom Cubicle System</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://www.pacificproduct.in/products/restroom-cubicles/sky-light</loc>
     <lastmod>2026-10-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
     <image:image>
       <image:loc>https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&amp;fit=crop&amp;w=800&amp;q=80</image:loc>
       <image:title>Sky Light Contemporary Restroom Cubicle</image:title>
-    </image:image>
-  </url>
-
-  <!-- ── 4. Modular Locker Models ───────────────────────────────────── -->
-  <url>
-    <loc>https://www.pacificproduct.in/products/lockers/locker-z-shape</loc>
-    <lastmod>2026-10-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&amp;fit=crop&amp;w=800&amp;q=80</image:loc>
-      <image:title>Z-Shape Interlocking Dual Locker</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://www.pacificproduct.in/products/lockers/locker-tier-1</loc>
-    <lastmod>2026-10-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&amp;fit=crop&amp;w=800&amp;q=80</image:loc>
-      <image:title>Tier 1 Compact Laminate Locker</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://www.pacificproduct.in/products/lockers/locker-tier-2</loc>
-    <lastmod>2026-10-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://images.unsplash.com/photo-1595846519845-68e298c2edd8?auto=format&amp;fit=crop&amp;w=800&amp;q=80</image:loc>
-      <image:title>Tier 2 Modular Storage Locker</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://www.pacificproduct.in/products/lockers/locker-tier-3</loc>
-    <lastmod>2026-10-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&amp;fit=crop&amp;w=800&amp;q=80</image:loc>
-      <image:title>Tier 3 Phenolic Locker System</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://www.pacificproduct.in/products/lockers/locker-tier-4</loc>
-    <lastmod>2026-10-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&amp;fit=crop&amp;w=800&amp;q=80</image:loc>
-      <image:title>Tier 4 High-Density Locker</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://www.pacificproduct.in/products/lockers/locker-tier-5</loc>
-    <lastmod>2026-10-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://images.unsplash.com/photo-1540497077202-7c8a3999166f?auto=format&amp;fit=crop&amp;w=800&amp;q=80</image:loc>
-      <image:title>Tier 5 High-Capacity Locker</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://www.pacificproduct.in/products/lockers/locker-tier-6</loc>
-    <lastmod>2026-10-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://images.unsplash.com/photo-1571902943202-507ec2618e8f?auto=format&amp;fit=crop&amp;w=800&amp;q=80</image:loc>
-      <image:title>Tier 6 Multi-Compartment Locker</image:title>
-    </image:image>
-  </url>
-
-  <!-- ── 5. Urinal Partition Models ─────────────────────────────────── -->
-  <url>
-    <loc>https://www.pacificproduct.in/products/urinal-partitions/urinal-model-a</loc>
-    <lastmod>2026-10-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://images.unsplash.com/photo-1584622781564-1d987f7333c1?auto=format&amp;fit=crop&amp;w=800&amp;q=80</image:loc>
-      <image:title>Urinal Partition Model A</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://www.pacificproduct.in/products/urinal-partitions/urinal-model-b</loc>
-    <lastmod>2026-10-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&amp;fit=crop&amp;w=800&amp;q=80</image:loc>
-      <image:title>Urinal Partition Model B</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://www.pacificproduct.in/products/urinal-partitions/urinal-model-c</loc>
-    <lastmod>2026-10-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&amp;fit=crop&amp;w=800&amp;q=80</image:loc>
-      <image:title>Urinal Partition Model C</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://www.pacificproduct.in/products/urinal-partitions/urinal-model-d</loc>
-    <lastmod>2026-10-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://images.unsplash.com/photo-1595846519845-68e298c2edd8?auto=format&amp;fit=crop&amp;w=800&amp;q=80</image:loc>
-      <image:title>Urinal Partition Model D</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://www.pacificproduct.in/products/urinal-partitions/designer-urinal-modesty-screen</loc>
-    <lastmod>2026-10-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://images.unsplash.com/photo-1584622781564-1d987f7333c1?auto=format&amp;fit=crop&amp;w=800&amp;q=80</image:loc>
-      <image:title>Urinal Modesty Screen Partition</image:title>
-    </image:image>
-  </url>
-
-  <!-- ── 6. Kids Toilet Cubicle Models ──────────────────────────────── -->
-  <url>
-    <loc>https://www.pacificproduct.in/products/kids-toilet/kids-summer-fun</loc>
-    <lastmod>2026-10-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&amp;fit=crop&amp;w=800&amp;q=80</image:loc>
-      <image:title>Summer Fun Kids Toilet Cubicle</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://www.pacificproduct.in/products/kids-toilet/kids-azalea</loc>
-    <lastmod>2026-10-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://images.unsplash.com/photo-1587654780291-39c9404d746b?auto=format&amp;fit=crop&amp;w=800&amp;q=80</image:loc>
-      <image:title>Azalea Kids Restroom Cubicle</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://www.pacificproduct.in/products/kids-toilet/cubicle-miniarc-kids</loc>
-    <lastmod>2026-10-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&amp;fit=crop&amp;w=800&amp;q=80</image:loc>
-      <image:title>Miniarc Arched-Door Kids Cubicle</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://www.pacificproduct.in/products/kids-toilet/cubicle-arcadia-kids</loc>
-    <lastmod>2026-10-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://images.unsplash.com/photo-1576495199011-eb94736d05d6?auto=format&amp;fit=crop&amp;w=800&amp;q=80</image:loc>
-      <image:title>Arcadia Scalloped Kids Cubicle</image:title>
     </image:image>
   </url>
 

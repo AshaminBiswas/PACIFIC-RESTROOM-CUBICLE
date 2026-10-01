@@ -5,7 +5,6 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { supabase, isSupabaseConfigured } from "./supabase";
 import type { Product, Blog, Solution, GalleryImage, HeroImage, CoreService, PageBanner, Catalog } from "./database.types";
 import {
-  demoProducts,
   demoBlogs,
   demoSolutions,
   demoGalleryImages,
@@ -64,11 +63,8 @@ export function useProducts(featuredOnly = false): UseDataResult<Product> {
     setError(null);
 
     if (!isSupabaseConfigured()) {
-      const filtered = featuredOnly
-        ? demoProducts.filter((p) => p.is_featured)
-        : demoProducts;
-      setCache(cacheKey, filtered);
-      setData(filtered);
+      setCache(cacheKey, []);
+      setData([]);
       setLoading(false);
       return;
     }
@@ -118,8 +114,7 @@ export function useProduct(slug: string | undefined): UseSingleResult<Product> {
       setLoading(true);
 
       if (!isSupabaseConfigured()) {
-        const found = demoProducts.find((p) => p.slug === slug) || null;
-        setData(found);
+        setData(null);
         setLoading(false);
         return;
       }
@@ -130,17 +125,15 @@ export function useProduct(slug: string | undefined): UseSingleResult<Product> {
           .select("*")
           .eq("slug", slug!)
           .single();
-        if (err || !row) {
-          const fallback = demoProducts.find((p) => p.slug === slug) || null;
-          setData(fallback);
+        if (err || !row || row.published === false) {
+          setData(null);
         } else {
           setData(row as Product);
         }
       } catch (e: any) {
-        console.error("Failed to fetch product from DB, attempting demo fallback:", e);
-        const fallback = demoProducts.find((p) => p.slug === slug) || null;
-        setData(fallback);
-        setError(fallback ? null : e.message);
+        console.error("Failed to fetch product from DB:", e);
+        setData(null);
+        setError(e.message);
       } finally {
         setLoading(false);
       }
