@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { useParams, useNavigate } from "react-router";
+import { useParams, useNavigate, Link } from "react-router";
 import {
   CheckCircle2, Shield, Zap, Award, ArrowRight, Phone,
   Clock, Wrench, BadgeCheck, Truck, HeadphonesIcon, Star,
@@ -50,7 +50,7 @@ function toCategorySlug(category: string | undefined) {
   if (cat.includes("cubicle") && !cat.includes("kid")) return "restroom-cubicles";
   if (cat.includes("locker")) return "lockers";
   if (cat.includes("urinal") || cat.includes("partition")) return "urinal-partitions";
-  if (cat.includes("kid")) return "kids-toilet";
+  if (cat.includes("kid") || cat.includes("toilet")) return "kids-cubicles";
   return cat.replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 }
 
@@ -98,11 +98,15 @@ export default function ProductDetailPage() {
   // Guard: if slug is a category name (e.g. /products/restroom-cubicles), redirect to category page
   useEffect(() => {
     const raw = (slug || "").toLowerCase().trim();
+    if (raw === "kids-toilet" || raw === "kids-cubicle") {
+      navigate("/products/kids-cubicles", { replace: true });
+      return;
+    }
     const isCategory = [
       "restroom-cubicles",
       "lockers",
       "urinal-partitions",
-      "kids-toilet",
+      "kids-cubicles",
       "cubicles",
       "cubicle",
       "locker-systems",
@@ -233,7 +237,7 @@ export default function ProductDetailPage() {
         jsonLd={[productSchema({ ...product, slug: productUrl.replace('/products/', '') }), breadcrumbSchema([
           {name: 'Home', url: '/'},
           {name: 'Products', url: '/products'},
-          ...(product.category ? [{name: product.category, url: `/products?category=${encodeURIComponent(product.category)}`}] : []),
+          ...(product.category ? [{name: product.category, url: `/products/${toCategorySlug(product.category) || 'restroom-cubicles'}`}] : []),
           {name: product.title, url: productUrl}
         ])]}
       />
@@ -245,24 +249,24 @@ export default function ProductDetailPage() {
 
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-28 sm:pt-32 pb-16 sm:pb-20 relative z-10">
           {/* Breadcrumb */}
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="hidden sm:flex items-center gap-2 text-sm text-gray-500 mb-8">
-            <button onClick={() => navigate("/")} className="hover:text-[#B5F823] transition-colors">Home</button>
+          <motion.nav aria-label="Breadcrumb" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="hidden sm:flex items-center gap-2 text-sm text-gray-400 mb-8">
+            <Link to="/" className="hover:text-[#B5F823] transition-colors">Home</Link>
             <ChevronRight className="w-3.5 h-3.5" />
-            <button onClick={() => navigate("/products")} className="hover:text-[#B5F823] transition-colors">Products</button>
+            <Link to="/products" className="hover:text-[#B5F823] transition-colors">Products</Link>
             {product.category && (
               <>
                 <ChevronRight className="w-3.5 h-3.5" />
-                <button
-                  onClick={() => navigate(`/products/${toCategorySlug(product.category) || 'restroom-cubicles'}`)}
+                <Link
+                  to={`/products/${toCategorySlug(product.category) || 'restroom-cubicles'}`}
                   className="hover:text-[#B5F823] transition-colors"
                 >
                   {product.category}
-                </button>
+                </Link>
               </>
             )}
             <ChevronRight className="w-3.5 h-3.5" />
-            <span className="text-white">{product.title}</span>
-          </motion.div>
+            <span className="text-white font-medium">{product.title}</span>
+          </motion.nav>
 
           <div className="grid lg:grid-cols-2 gap-10 lg:gap-20 items-center">
             {/* Left: Text content */}

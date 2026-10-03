@@ -17,7 +17,7 @@ function toCategorySlug(category: string | undefined) {
   if (cat.includes("cubicle") && !cat.includes("kid")) return "restroom-cubicles";
   if (cat.includes("locker")) return "lockers";
   if (cat.includes("urinal") || cat.includes("partition")) return "urinal-partitions";
-  if (cat.includes("kid")) return "kids-toilet";
+  if (cat.includes("kid") || cat.includes("toilet")) return "kids-cubicles";
   return cat.replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 }
 

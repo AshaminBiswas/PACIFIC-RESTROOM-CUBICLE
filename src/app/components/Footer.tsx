@@ -14,7 +14,7 @@ export function Footer() {
     { name: "Restroom Cubicles", path: "/products/restroom-cubicles" },
     { name: "Modular Lockers", path: "/products/lockers" },
     { name: "Urinal Partitions", path: "/products/urinal-partitions" },
-    { name: "Kids Safety Cubicles", path: "/products/kids-toilet" },
+    { name: "Kids Safety Cubicles", path: "/products/kids-cubicles" },
     { name: "All Architectural Models", path: "/products" },
   ];
 

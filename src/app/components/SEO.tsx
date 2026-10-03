@@ -45,7 +45,10 @@ export function SEO({
   geoRegion = "IN-DL",
   geoPlacename = "New Delhi, India",
 }: SEOProps) {
-  const fullTitle = `${title} | ${SITE_NAME}`;
+  const fullTitle =
+    title.includes(SITE_NAME) || title.includes("Pacific")
+      ? title
+      : `${title} | ${SITE_NAME}`;
   const canonicalUrl = canonical ? `${SITE_URL}${canonical}` : undefined;
 
   // Normalize jsonLd to always be an array

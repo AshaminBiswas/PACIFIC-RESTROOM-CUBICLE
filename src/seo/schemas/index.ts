@@ -11,9 +11,9 @@ export function organizationSchema() {
     url: SITE_URL,
     logo: {
       "@type": "ImageObject",
-      url: `${SITE_URL}/logo.webp`,
-      width: 200,
-      height: 60,
+      url: `${SITE_URL}/logo.png`,
+      width: 1024,
+      height: 1024,
     },
     description: DEFAULT_DESCRIPTION,
     foundingDate: "2012",
@@ -234,6 +234,13 @@ export function webSiteSchema() {
     "@type": "WebSite",
     "@id": `${SITE_URL}/#website`,
     name: SITE_NAME,
+    alternateName: [
+      "Pacific Products",
+      "Pacific Cubicles",
+      "Pacific Restroom Cubicles",
+      "Pacific Restroom & Cubicle",
+      "Pacific Products and Solutions",
+    ],
     url: SITE_URL,
     inLanguage: "en-IN",
     potentialAction: {

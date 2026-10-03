@@ -1,11 +1,10 @@
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter, Navigate, Outlet } from "react-router";
 import { Navbar } from "./components/Navbar";
 import { Footer } from "./components/Footer";
 import { ScrollToTop } from "./components/ScrollToTop";
 import CookieConsent from "./components/CookieConsent";
 import { Chatbot } from "./components/Chatbot";
 import ProtectedRoute from "./components/ProtectedRoute";
-import { Outlet } from "react-router";
 import { Suspense, lazy } from "react";
 import {
   PageSkeleton,
@@ -132,52 +131,36 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "products/kids-toilet",
+        path: "products/kids-cubicles",
         element: (
           <Suspense fallback={<ProductsSkeleton />}>
-            <Products categorySlug="kids-toilet" />
+            <Products categorySlug="kids-cubicles" />
           </Suspense>
         ),
+      },
+      {
+        path: "products/kids-toilet",
+        element: <Navigate to="/products/kids-cubicles" replace />,
       },
       {
         path: "products/kids-cubicle",
-        element: (
-          <Suspense fallback={<ProductsSkeleton />}>
-            <Products categorySlug="kids-toilet" />
-          </Suspense>
-        ),
+        element: <Navigate to="/products/kids-cubicles" replace />,
       },
       {
         path: "cubicles",
-        element: (
-          <Suspense fallback={<ProductsSkeleton />}>
-            <Products categorySlug="restroom-cubicles" />
-          </Suspense>
-        ),
+        element: <Navigate to="/products/restroom-cubicles" replace />,
       },
       {
         path: "lockers",
-        element: (
-          <Suspense fallback={<ProductsSkeleton />}>
-            <Products categorySlug="lockers" />
-          </Suspense>
-        ),
+        element: <Navigate to="/products/lockers" replace />,
       },
       {
         path: "urinal-partitions",
-        element: (
-          <Suspense fallback={<ProductsSkeleton />}>
-            <Products categorySlug="urinal-partitions" />
-          </Suspense>
-        ),
+        element: <Navigate to="/products/urinal-partitions" replace />,
       },
       {
         path: "kids-cubicle",
-        element: (
-          <Suspense fallback={<ProductsSkeleton />}>
-            <Products categorySlug="kids-toilet" />
-          </Suspense>
-        ),
+        element: <Navigate to="/products/kids-cubicles" replace />,
       },
       {
         path: "products/:categorySlug/:productSlug",

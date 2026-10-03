@@ -3,7 +3,7 @@ import { ProductCard } from "../components/ProductCard";
 import { useSearchParams, useParams, Link, useNavigate } from "react-router";
 import { useProducts, usePageBanner } from "../../lib/hooks";
 import { SEO } from "../components/SEO";
-import { DEFAULT_KEYWORDS, itemListSchema, faqSchema } from "../../lib/seo-data";
+import { DEFAULT_KEYWORDS, itemListSchema, faqSchema, breadcrumbSchema } from "../../lib/seo-data";
 import { PageHero } from "../components/PageHero";
 import { ShieldCheck, Award, ArrowRight, Layers, FileText, Phone, MessageSquare, Sparkles } from "lucide-react";
 import { Button } from "../components/Button";
@@ -16,6 +16,9 @@ interface CategoryMeta {
   key: string;
   name: string;
   slug: string;
+  seoTitle: string;
+  seoDescription: string;
+  h1Title: string;
   title: string;
   subtitle: string;
   badge: string;
@@ -26,7 +29,10 @@ const CATEGORY_DEFINITIONS: Record<string, CategoryMeta> = {
     key: "restroom-cubicles",
     name: "Restroom Cubicles",
     slug: "restroom-cubicles",
-    title: "Restroom Cubicle Systems",
+    seoTitle: "Restroom Cubicles Manufacturer in India | Pacific Products",
+    seoDescription: "Buy premium 12mm & 18mm compact laminate restroom cubicles with Grade 304 SS hardware. 10-year warranty, pan-India delivery & installation. Request a quote now.",
+    h1Title: "Commercial Restroom Cubicle Systems & Toilet Partitions",
+    title: "Commercial Restroom Cubicle Systems",
     subtitle: "Precision-engineered 12mm & 18mm solid compact laminate cubicles with heavy-duty Grade 304/316 SS, Polyamide nylon, and Aluminium profile hardware.",
     badge: "Dual Warranty: 10-Yr Board & 1-Yr Hardware",
   },
@@ -34,6 +40,9 @@ const CATEGORY_DEFINITIONS: Record<string, CategoryMeta> = {
     key: "lockers",
     name: "Lockers",
     slug: "lockers",
+    seoTitle: "Modular HPL Locker Systems Manufacturer India | Pacific",
+    seoDescription: "Heavy-duty phenolic compact laminate lockers for gyms, schools & corporate offices. Rust-proof, digital lock options & 10-year warranty. Request CAD BOQ today.",
+    h1Title: "Modular Compact Laminate Locker Systems for Commercial Spaces",
     title: "Modular HPL Locker Systems",
     subtitle: "High-density phenolic compact laminate lockers with digital cam locks, master key systems, and integrated ventilation slots for commercial spaces.",
     badge: "Heavy-Duty Phenolic Core",
@@ -42,14 +51,20 @@ const CATEGORY_DEFINITIONS: Record<string, CategoryMeta> = {
     key: "urinal-partitions",
     name: "Urinal Partitions",
     slug: "urinal-partitions",
+    seoTitle: "Urinal Partition Screens Manufacturer in India | Pacific",
+    seoDescription: "Waterproof, anti-bacterial compact laminate urinal modesty partition screens. Cantilever wall-hung & floor-mounted options. Fast pan-India supply. Get pricing.",
+    h1Title: "Hygienic Compact Laminate Urinal Partition Modesty Screens",
     title: "Urinal Partition Screens",
     subtitle: "Hygienic, anti-bacterial compact laminate modesty partition screens in cantilever wall-hung and floor-supporting configurations.",
     badge: "100% Waterproof & Anti-Bacterial",
   },
-  "kids-toilet": {
-    key: "kids-toilet",
+  "kids-cubicles": {
+    key: "kids-cubicles",
     name: "Kids Cubicle",
-    slug: "kids-toilet",
+    slug: "kids-cubicles",
+    seoTitle: "Kids Toilet Cubicles Manufacturer in India | Pacific",
+    seoDescription: "Child-safe school toilet cubicles with anti-finger pinch safety clearance, rounded doors & emergency coin release. Fast pan-India supply. Get custom BOQ today.",
+    h1Title: "Child-Safe Kids Toilet Cubicles & Preschool Restroom Partitions",
     title: "Kids & Preschool Safety Cubicles",
     subtitle: "Specially designed compact cubicles featuring anti-finger pinch safety clearances, rounded corners, and emergency exterior coin release.",
     badge: "Child-Safe Engineering Standard",
@@ -62,7 +77,7 @@ function normalizeCategorySlug(raw?: string): string | null {
   if (s.includes("cubicle") && !s.includes("kid")) return "restroom-cubicles";
   if (s.includes("locker")) return "lockers";
   if (s.includes("urinal") || s.includes("partition")) return "urinal-partitions";
-  if (s.includes("kid")) return "kids-toilet";
+  if (s.includes("kid") || s.includes("toilet")) return "kids-cubicles";
   if (CATEGORY_DEFINITIONS[s]) return s;
   return null;
 }
@@ -73,7 +88,7 @@ function toProductCategorySlug(category: string | undefined): string {
   if (cat.includes("cubicle") && !cat.includes("kid")) return "restroom-cubicles";
   if (cat.includes("locker")) return "lockers";
   if (cat.includes("urinal") || cat.includes("partition")) return "urinal-partitions";
-  if (cat.includes("kid")) return "kids-toilet";
+  if (cat.includes("kid") || cat.includes("toilet")) return "kids-cubicles";
   return cat.replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 }
 
@@ -112,14 +127,18 @@ export default function ProductsPage({ categorySlug: propCategorySlug }: Product
     "restroom-cubicles": activePool.filter((p) => toProductCategorySlug(p.category) === "restroom-cubicles").length,
     "lockers": activePool.filter((p) => toProductCategorySlug(p.category) === "lockers").length,
     "urinal-partitions": activePool.filter((p) => toProductCategorySlug(p.category) === "urinal-partitions").length,
-    "kids-toilet": activePool.filter((p) => toProductCategorySlug(p.category) === "kids-toilet").length,
+    "kids-cubicles": activePool.filter((p) => toProductCategorySlug(p.category) === "kids-cubicles").length,
   };
 
   const pageTitle = activeCategoryMeta
-    ? `${activeCategoryMeta.title} | Pacific Restroom Cubicle`
-    : "Commercial Restroom Cubicles, Lockers & Partitions | Pacific";
+    ? activeCategoryMeta.seoTitle
+    : "Commercial Restroom Cubicles & Locker Catalog | Pacific";
 
-  const heroTitle = activeCategoryMeta ? activeCategoryMeta.title : "Architectural Models & Systems";
+  const pageDescription = activeCategoryMeta
+    ? activeCategoryMeta.seoDescription
+    : "Explore India's complete range of compact laminate restroom cubicles, school kids cubicles, urinal partitions & modular lockers. Direct manufacturer factory BOQ.";
+
+  const heroTitle = activeCategoryMeta ? activeCategoryMeta.h1Title : "Commercial Restroom Cubicles, Lockers & Partitions Catalog";
   const heroSubtitle = activeCategoryMeta
     ? activeCategoryMeta.subtitle
     : "Precision-engineered compact laminate cubicles, modular locker systems, and partition modesty screens built for Indian commercial infrastructure.";
@@ -129,10 +148,22 @@ export default function ProductsPage({ categorySlug: propCategorySlug }: Product
     <div className="min-h-screen pt-20 bg-transparent dark:bg-[#030213] transition-colors">
       <SEO
         title={pageTitle}
-        description={heroSubtitle}
+        description={pageDescription}
         keywords={`${DEFAULT_KEYWORDS}, restroom cubicles buy India, toilet partition price India, HPL cubicle system, locker system manufacturer, urinal modesty partitions`}
         canonical={activeSlug ? `/products/${activeSlug}` : "/products"}
         jsonLd={[
+          breadcrumbSchema(
+            activeCategoryMeta
+              ? [
+                  { name: "Home", url: "/" },
+                  { name: "Products", url: "/products" },
+                  { name: activeCategoryMeta.name, url: `/products/${activeCategoryMeta.slug}` },
+                ]
+              : [
+                  { name: "Home", url: "/" },
+                  { name: "Products", url: "/products" },
+                ]
+          ),
           itemListSchema(
             filteredProducts.map((p) => ({
               name: p.title,
@@ -257,11 +288,11 @@ export default function ProductsPage({ categorySlug: propCategorySlug }: Product
               </span>
             </Link>
 
-            {/* Kids Toilet */}
+            {/* Kids Cubicles */}
             <Link
-              to="/products/kids-toilet"
+              to="/products/kids-cubicles"
               className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all flex items-center gap-2 ${
-                activeSlug === "kids-toilet"
+                activeSlug === "kids-cubicles"
                   ? "bg-[#7FB706] text-white shadow-md shadow-[#7FB706]/20"
                   : "bg-gray-100 dark:bg-white/5 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-white/10"
               }`}
@@ -269,12 +300,12 @@ export default function ProductsPage({ categorySlug: propCategorySlug }: Product
               <span>Kids Safety Cubicles</span>
               <span
                 className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${
-                  activeSlug === "kids-toilet"
+                  activeSlug === "kids-cubicles"
                     ? "bg-white/25 text-white"
                     : "bg-gray-200 dark:bg-white/10 text-gray-600 dark:text-gray-400"
                 }`}
               >
-                {categoryCounts["kids-toilet"]}
+                {categoryCounts["kids-cubicles"]}
               </span>
             </Link>
           </div>

@@ -35,6 +35,38 @@
       ]
     }
   ],
+  "redirects": [
+    {
+      "source": "/products/kids-toilet",
+      "destination": "/products/kids-cubicles",
+      "permanent": true
+    },
+    {
+      "source": "/products/kids-cubicle",
+      "destination": "/products/kids-cubicles",
+      "permanent": true
+    },
+    {
+      "source": "/kids-cubicle",
+      "destination": "/products/kids-cubicles",
+      "permanent": true
+    },
+    {
+      "source": "/cubicles",
+      "destination": "/products/restroom-cubicles",
+      "permanent": true
+    },
+    {
+      "source": "/lockers",
+      "destination": "/products/lockers",
+      "permanent": true
+    },
+    {
+      "source": "/urinal-partitions",
+      "destination": "/products/urinal-partitions",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/api/nvidia/:path*",

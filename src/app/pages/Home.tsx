@@ -379,6 +379,17 @@ function HeroSection() {
         style={{ opacity }}
         className="relative z-20 w-full max-w-6xl mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 text-center pb-[18vh]"
       >
+        {/* Primary Keyword H1 */}
+        <motion.h1
+          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-4 sm:mb-6 tracking-tight leading-tight max-w-4xl mx-auto"
+          style={{ textShadow: "0 2px 20px rgba(0,0,0,0.8)" }}
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          Restroom Cubicles &amp; Toilet Partitions Manufacturer in India
+        </motion.h1>
+
         {/* Description */}
         <motion.p
           key={currentSlide}
@@ -803,176 +814,180 @@ function CategoryBentoGrid({ navigate }: { navigate: (path: string) => void }) {
         {/* Bento Grid — 1 Card per row */}
         <div className="grid grid-cols-1 gap-6">
           {/* Card 1: Restroom Cubicles */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            whileHover={{ y: -4 }}
-            onClick={() => navigate("/products/restroom-cubicles")}
-            className="w-full group relative rounded-3xl overflow-hidden bg-[#0a0a1a] border border-gray-200 dark:border-white/10 hover:border-[#7FB706]/50 shadow-xl cursor-pointer min-h-[360px] flex flex-col justify-end p-6 sm:p-8"
-          >
-            <div className="absolute inset-0 z-0">
-              <ImageWithFallback
-                src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80"
-                alt="Commercial Restroom Cubicle Systems"
-                className="w-full h-full object-cover object-center transform transition-transform duration-700 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
-            </div>
+          <Link to="/products/restroom-cubicles" className="block focus:outline-none">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              whileHover={{ y: -4 }}
+              className="w-full group relative rounded-3xl overflow-hidden bg-[#0a0a1a] border border-gray-200 dark:border-white/10 hover:border-[#7FB706]/50 shadow-xl cursor-pointer min-h-[360px] flex flex-col justify-end p-6 sm:p-8"
+            >
+              <div className="absolute inset-0 z-0">
+                <ImageWithFallback
+                  src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80"
+                  alt="Commercial Restroom Cubicle Systems"
+                  className="w-full h-full object-cover object-center transform transition-transform duration-700 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+              </div>
 
-            <div className="relative z-10 space-y-3">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="px-3 py-1 rounded-full text-[11px] font-bold bg-[#7FB706] text-black uppercase tracking-wider">
-                  Flagship Product
-                </span>
-                <span className="px-3 py-1 rounded-full text-[11px] font-semibold bg-white/20 text-white backdrop-blur-md">
-                  12mm &amp; 18mm Board
-                </span>
-                <span className="px-3 py-1 rounded-full text-[11px] font-semibold bg-white/20 text-white backdrop-blur-md">
-                  SS 304 / Nylon / Aluminium
-                </span>
+              <div className="relative z-10 space-y-3">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="px-3 py-1 rounded-full text-[11px] font-bold bg-[#7FB706] text-black uppercase tracking-wider">
+                    Flagship Product
+                  </span>
+                  <span className="px-3 py-1 rounded-full text-[11px] font-semibold bg-white/20 text-white backdrop-blur-md">
+                    12mm &amp; 18mm Board
+                  </span>
+                  <span className="px-3 py-1 rounded-full text-[11px] font-semibold bg-white/20 text-white backdrop-blur-md">
+                    SS 304 / Nylon / Aluminium
+                  </span>
+                </div>
+                <h3 className="text-2xl sm:text-3xl font-bold text-white group-hover:text-[#B5F823] transition-colors">
+                  Restroom Cubicle Systems
+                </h3>
+                <p className="text-xs sm:text-sm text-gray-300 max-w-xl leading-relaxed">
+                  Floor-anchored, overhead-braced, and ceiling-hung privacy systems engineered with high-density solid compact laminate and anti-vandalism fittings.
+                </p>
+                <div className="pt-2 flex items-center text-sm font-bold text-[#7FB706] group-hover:text-[#B5F823] gap-2">
+                  <span>Explore Cubicle Models</span>
+                  <ArrowRight className="w-4 h-4 transform transition-transform group-hover:translate-x-1" />
+                </div>
               </div>
-              <h3 className="text-2xl sm:text-3xl font-bold text-white group-hover:text-[#B5F823] transition-colors">
-                Restroom Cubicle Systems
-              </h3>
-              <p className="text-xs sm:text-sm text-gray-300 max-w-xl leading-relaxed">
-                Floor-anchored, overhead-braced, and ceiling-hung privacy systems engineered with high-density solid compact laminate and anti-vandalism fittings.
-              </p>
-              <div className="pt-2 flex items-center text-sm font-bold text-[#7FB706] group-hover:text-[#B5F823] gap-2">
-                <span>Explore Cubicle Models</span>
-                <ArrowRight className="w-4 h-4 transform transition-transform group-hover:translate-x-1" />
-              </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          </Link>
 
           {/* Card 2: Modular Lockers */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            whileHover={{ y: -4 }}
-            onClick={() => navigate("/products/lockers")}
-            className="w-full group relative rounded-3xl overflow-hidden bg-[#0a0a1a] border border-gray-200 dark:border-white/10 hover:border-[#7FB706]/50 shadow-xl cursor-pointer min-h-[360px] flex flex-col justify-end p-6 sm:p-8"
-          >
-            <div className="absolute inset-0 z-0">
-              <ImageWithFallback
-                src="https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=1200&q=80"
-                alt="Modular HPL Lockers"
-                className="w-full h-full object-cover object-center transform transition-transform duration-700 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
-            </div>
+          <Link to="/products/lockers" className="block focus:outline-none">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              whileHover={{ y: -4 }}
+              className="w-full group relative rounded-3xl overflow-hidden bg-[#0a0a1a] border border-gray-200 dark:border-white/10 hover:border-[#7FB706]/50 shadow-xl cursor-pointer min-h-[360px] flex flex-col justify-end p-6 sm:p-8"
+            >
+              <div className="absolute inset-0 z-0">
+                <ImageWithFallback
+                  src="https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=1200&q=80"
+                  alt="Modular HPL Lockers"
+                  className="w-full h-full object-cover object-center transform transition-transform duration-700 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+              </div>
 
-            <div className="relative z-10 space-y-3">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="px-3 py-1 rounded-full text-[11px] font-bold bg-indigo-500 text-white uppercase tracking-wider">
-                  Storage Systems
-                </span>
-                <span className="px-3 py-1 rounded-full text-[11px] font-semibold bg-white/20 text-white backdrop-blur-md">
-                  1 to 6 Tiers
-                </span>
-                <span className="px-3 py-1 rounded-full text-[11px] font-semibold bg-white/20 text-white backdrop-blur-md">
-                  Digital &amp; Cam Locks
-                </span>
+              <div className="relative z-10 space-y-3">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="px-3 py-1 rounded-full text-[11px] font-bold bg-indigo-500 text-white uppercase tracking-wider">
+                    Storage Systems
+                  </span>
+                  <span className="px-3 py-1 rounded-full text-[11px] font-semibold bg-white/20 text-white backdrop-blur-md">
+                    1 to 6 Tiers
+                  </span>
+                  <span className="px-3 py-1 rounded-full text-[11px] font-semibold bg-white/20 text-white backdrop-blur-md">
+                    Digital &amp; Cam Locks
+                  </span>
+                </div>
+                <h3 className="text-2xl sm:text-3xl font-bold text-white group-hover:text-[#B5F823] transition-colors">
+                  Modular HPL Locker Systems
+                </h3>
+                <p className="text-xs sm:text-sm text-gray-300 max-w-xl leading-relaxed">
+                  Vandal-resistant, moisture-proof compact laminate lockers with concealed heavy-duty hinges and ventilation louvers for gyms, IT parks &amp; sports hubs.
+                </p>
+                <div className="pt-2 flex items-center text-sm font-bold text-[#7FB706] group-hover:text-[#B5F823] gap-2">
+                  <span>Explore Locker Models</span>
+                  <ArrowRight className="w-4 h-4 transform transition-transform group-hover:translate-x-1" />
+                </div>
               </div>
-              <h3 className="text-2xl sm:text-3xl font-bold text-white group-hover:text-[#B5F823] transition-colors">
-                Modular HPL Locker Systems
-              </h3>
-              <p className="text-xs sm:text-sm text-gray-300 max-w-xl leading-relaxed">
-                Vandal-resistant, moisture-proof compact laminate lockers with concealed heavy-duty hinges and ventilation louvers for gyms, IT parks &amp; sports hubs.
-              </p>
-              <div className="pt-2 flex items-center text-sm font-bold text-[#7FB706] group-hover:text-[#B5F823] gap-2">
-                <span>Explore Locker Models</span>
-                <ArrowRight className="w-4 h-4 transform transition-transform group-hover:translate-x-1" />
-              </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          </Link>
 
           {/* Card 3: Urinal Partitions */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            whileHover={{ y: -4 }}
-            onClick={() => navigate("/products/urinal-partitions")}
-            className="w-full group relative rounded-3xl overflow-hidden bg-[#0a0a1a] border border-gray-200 dark:border-white/10 hover:border-[#7FB706]/50 shadow-xl cursor-pointer min-h-[360px] flex flex-col justify-end p-6 sm:p-8"
-          >
-            <div className="absolute inset-0 z-0">
-              <ImageWithFallback
-                src="https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=1200&q=80"
-                alt="Urinal Partitions"
-                className="w-full h-full object-cover object-center transform transition-transform duration-700 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
-            </div>
+          <Link to="/products/urinal-partitions" className="block focus:outline-none">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              whileHover={{ y: -4 }}
+              className="w-full group relative rounded-3xl overflow-hidden bg-[#0a0a1a] border border-gray-200 dark:border-white/10 hover:border-[#7FB706]/50 shadow-xl cursor-pointer min-h-[360px] flex flex-col justify-end p-6 sm:p-8"
+            >
+              <div className="absolute inset-0 z-0">
+                <ImageWithFallback
+                  src="https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=1200&q=80"
+                  alt="Urinal Partitions"
+                  className="w-full h-full object-cover object-center transform transition-transform duration-700 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+              </div>
 
-            <div className="relative z-10 space-y-3">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="px-3 py-1 rounded-full text-[11px] font-bold bg-amber-500 text-black uppercase tracking-wider">
-                  Privacy Screens
-                </span>
-                <span className="px-3 py-1 rounded-full text-[11px] font-semibold bg-white/20 text-white backdrop-blur-md">
-                  Wall-Hung &amp; Floor Leg
-                </span>
+              <div className="relative z-10 space-y-3">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="px-3 py-1 rounded-full text-[11px] font-bold bg-amber-500 text-black uppercase tracking-wider">
+                    Privacy Screens
+                  </span>
+                  <span className="px-3 py-1 rounded-full text-[11px] font-semibold bg-white/20 text-white backdrop-blur-md">
+                    Wall-Hung &amp; Floor Leg
+                  </span>
+                </div>
+                <h3 className="text-xl sm:text-2xl font-bold text-white group-hover:text-[#B5F823] transition-colors">
+                  Urinal Partition Screens
+                </h3>
+                <p className="text-xs sm:text-sm text-gray-300 leading-relaxed">
+                  Floating wall-hung cantilever and floor-anchored modesty panels with beveled safety edges and Grade 304 SS brackets.
+                </p>
+                <div className="pt-2 flex items-center text-sm font-bold text-[#7FB706] group-hover:text-[#B5F823] gap-2">
+                  <span>View Partitions</span>
+                  <ArrowRight className="w-4 h-4 transform transition-transform group-hover:translate-x-1" />
+                </div>
               </div>
-              <h3 className="text-xl sm:text-2xl font-bold text-white group-hover:text-[#B5F823] transition-colors">
-                Urinal Partition Screens
-              </h3>
-              <p className="text-xs sm:text-sm text-gray-300 leading-relaxed">
-                Floating wall-hung cantilever and floor-anchored modesty panels with beveled safety edges and Grade 304 SS brackets.
-              </p>
-              <div className="pt-2 flex items-center text-sm font-bold text-[#7FB706] group-hover:text-[#B5F823] gap-2">
-                <span>View Partitions</span>
-                <ArrowRight className="w-4 h-4 transform transition-transform group-hover:translate-x-1" />
-              </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          </Link>
 
           {/* Card 4: Kids Cubicles */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.3 }}
-            whileHover={{ y: -4 }}
-            onClick={() => navigate("/products/kids-toilet")}
-            className="w-full group relative rounded-3xl overflow-hidden bg-[#0a0a1a] border border-gray-200 dark:border-white/10 hover:border-[#7FB706]/50 shadow-xl cursor-pointer min-h-[360px] flex flex-col justify-end p-6 sm:p-8"
-          >
-            <div className="absolute inset-0 z-0">
-              <ImageWithFallback
-                src="https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&w=1200&q=80"
-                alt="Kids & Preschool Toilet Cubicles"
-                className="w-full h-full object-cover object-center transform transition-transform duration-700 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
-            </div>
+          <Link to="/products/kids-cubicles" className="block focus:outline-none">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3 }}
+              whileHover={{ y: -4 }}
+              className="w-full group relative rounded-3xl overflow-hidden bg-[#0a0a1a] border border-gray-200 dark:border-white/10 hover:border-[#7FB706]/50 shadow-xl cursor-pointer min-h-[360px] flex flex-col justify-end p-6 sm:p-8"
+            >
+              <div className="absolute inset-0 z-0">
+                <ImageWithFallback
+                  src="https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&w=1200&q=80"
+                  alt="Kids & Preschool Toilet Cubicles"
+                  className="w-full h-full object-cover object-center transform transition-transform duration-700 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+              </div>
 
-            <div className="relative z-10 space-y-3">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="px-3 py-1 rounded-full text-[11px] font-bold bg-rose-500 text-white uppercase tracking-wider">
-                  Child Safety First
-                </span>
-                <span className="px-3 py-1 rounded-full text-[11px] font-semibold bg-white/20 text-white backdrop-blur-md">
-                  Anti-Finger Pinch Gaps
-                </span>
-                <span className="px-3 py-1 rounded-full text-[11px] font-semibold bg-white/20 text-white backdrop-blur-md">
-                  Emergency Coin Turn
-                </span>
+              <div className="relative z-10 space-y-3">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="px-3 py-1 rounded-full text-[11px] font-bold bg-rose-500 text-white uppercase tracking-wider">
+                    Child Safety First
+                  </span>
+                  <span className="px-3 py-1 rounded-full text-[11px] font-semibold bg-white/20 text-white backdrop-blur-md">
+                    Anti-Finger Pinch Gaps
+                  </span>
+                  <span className="px-3 py-1 rounded-full text-[11px] font-semibold bg-white/20 text-white backdrop-blur-md">
+                    Emergency Coin Turn
+                  </span>
+                </div>
+                <h3 className="text-xl sm:text-2xl font-bold text-white group-hover:text-[#B5F823] transition-colors">
+                  Kids &amp; Preschool Safety Cubicles
+                </h3>
+                <p className="text-xs sm:text-sm text-gray-300 leading-relaxed">
+                  Ergonomic child-safe washroom cubicles designed with low-height doors, soft spring hinges, rounded corner profiles, and exterior emergency overrides.
+                </p>
+                <div className="pt-2 flex items-center text-sm font-bold text-[#7FB706] group-hover:text-[#B5F823] gap-2">
+                  <span>View Kids Systems</span>
+                  <ArrowRight className="w-4 h-4 transform transition-transform group-hover:translate-x-1" />
+                </div>
               </div>
-              <h3 className="text-xl sm:text-2xl font-bold text-white group-hover:text-[#B5F823] transition-colors">
-                Kids &amp; Preschool Safety Cubicles
-              </h3>
-              <p className="text-xs sm:text-sm text-gray-300 leading-relaxed">
-                Ergonomic child-safe washroom cubicles designed with low-height doors, soft spring hinges, rounded corner profiles, and exterior emergency overrides.
-              </p>
-              <div className="pt-2 flex items-center text-sm font-bold text-[#7FB706] group-hover:text-[#B5F823] gap-2">
-                <span>View Kids Systems</span>
-                <ArrowRight className="w-4 h-4 transform transition-transform group-hover:translate-x-1" />
-              </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          </Link>
         </div>
       </div>
     </section>
@@ -1470,8 +1485,8 @@ export default function HomePage() {
   return (
     <div className="min-h-screen">
       <SEO
-        title="Restroom Cubicles Manufacturer India | Toilet Partitions, Cladding &amp; Lockers"
-        description="Pacific Products &amp; Solutions — India's #1 manufacturer of restroom cubicles, toilet partitions, exterior cladding, locker systems &amp; custom hardware. ISO 9001:2015 certified. Pan-India turnkey installation. Get a free quote today."
+        title="Restroom Cubicles & Partitions Manufacturer India | Pacific"
+        description="India's premier manufacturer of HPL restroom cubicles, modular lockers & urinal partitions. ISO 9001 certified. Get direct factory pricing & turnkey BOQ today."
         keywords={`${DEFAULT_KEYWORDS}, restroom cubicles manufacturer Delhi, toilet partitions manufacturer India, exterior cladding supplier India, HPL cubicle system, locker system supplier India, compact laminate partitions`}
         canonical="/"
         jsonLd={[
@@ -1486,7 +1501,6 @@ export default function HomePage() {
           ])
         ]}
       />
-      <h1 className="sr-only">Pacific Products &amp; Solutions — Premium Restroom Cubicles, Cladding &amp; Interior Solutions</h1>
 
       {/* 1. Hero Section */}
       <HeroSection />
